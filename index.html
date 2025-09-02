@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dashboard Monitoring - Upload Excel & Update Interaktif</title>
+<title>Dashboard Monitoring Pengiriman Beton</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 <style>
-  /* (Gunakan style dari script Anda sebelumnya, disingkat agar fokus ke fungsi) */
   body { font-family: 'Poppins', sans-serif; background: #f5f7fa; color: #333; margin: 0; padding: 20px; }
   .container { max-width: 1200px; margin: auto; }
   header { background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
@@ -35,16 +34,6 @@
   .btn-primary:hover { background-color: #2980b9; }
   .btn-secondary { background-color: #ecf0f1; color: #2c3e50; }
   .btn-secondary:hover { background-color: #dde4e6; }
-  .update-section { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding: 15px; background-color: #e8f4fc; border-radius: 8px; flex-wrap: wrap; }
-  .last-update { display: flex; align-items: center; margin-bottom: 10px; }
-  .last-update i { margin-right: 10px; color: #3498db; }
-  .auto-update { display: flex; align-items: center; }
-  .switch { position: relative; display: inline-block; width: 50px; height: 24px; margin-left: 10px; }
-  .switch input { opacity: 0; width: 0; height: 0; }
-  .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
-  .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-  input:checked + .slider { background-color: #2ecc71; }
-  input:checked + .slider:before { transform: translateX(26px); }
   .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 20px; }
   .card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
   .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
@@ -115,17 +104,17 @@
         <label for="plant-filter">Plant:</label>
         <select id="plant-filter">
           <option value="all">Semua Plant</option>
-          <option value="denpasar">Denpasar 2</option>
-          <option value="gianyar">Gianyar</option>
+          <option value="DENPASAR 2">Denpasar 2</option>
+          <option value="GIANYAR">Gianyar</option>
         </select>
       </div>
       <div class="filter-group">
         <label for="status-filter">Status:</label>
         <select id="status-filter">
           <option value="all">Semua Status</option>
-          <option value="delivered">Terkirim</option>
-          <option value="pending">Tertunda</option>
-          <option value="cancel">Batal</option>
+          <option value="DELIVERED">Terkirim</option>
+          <option value="PENDING">Tertunda</option>
+          <option value="CANCEL">Batal</option>
         </select>
       </div>
       <div class="filter-group">
@@ -137,17 +126,10 @@
       <button class="btn btn-primary" id="apply-filter"><i class="fas fa-check"></i> Terapkan Filter</button>
       <button class="btn btn-secondary" id="reset-filter"><i class="fas fa-sync"></i> Reset Filter</button>
     </div>
-    <div class="update-section">
+    <div class="update-section" style="margin-top:15px;">
       <div class="last-update">
         <i class="fas fa-clock"></i>
         <span>Terakhir update: <span id="last-update-time">--:--:--</span></span>
-      </div>
-      <div class="auto-update">
-        <span>Auto Update:</span>
-        <label class="switch">
-          <input type="checkbox" id="auto-update-toggle" />
-          <span class="slider"></span>
-        </label>
       </div>
     </div>
   </div>
@@ -182,7 +164,7 @@
     </div>
   </div>
 
-  <div class="card">
+  <div class="card" style="margin-top:20px;">
     <div class="card-header">
       <h2>Data Pengiriman Terbaru</h2>
       <i class="fas fa-list"></i>
@@ -210,14 +192,8 @@
 <div id="notification" class="notification"></div>
 
 <script>
-  // Data global
   let deliveryData = [];
 
-  // Chart instances
-  let statusChart, volumeChart, plantChart;
-  let autoUpdateInterval;
-
-  // Format tanggal dd/mm/yyyy ke Date object
   function parseDateString(dateStr) {
     if (!dateStr) return null;
     const parts = dateStr.split('/');
@@ -227,7 +203,6 @@
     return new Date(dateStr);
   }
 
-  // Parsing angka dengan koma desimal
   function parseNumber(value) {
     if (value === '-' || value === '' || value === null || value === undefined) return 0;
     if (typeof value === 'number') return value;
@@ -238,20 +213,17 @@
     return 0;
   }
 
-  // Update tanggal sekarang di header
   function updateCurrentDate() {
     const now = new Date();
     const options = { day: '2-digit', month: 'long', year: 'numeric' };
     document.getElementById('current-date').textContent = now.toLocaleDateString('id-ID', options);
   }
 
-  // Update waktu terakhir update
   function updateLastUpdateTime() {
     const now = new Date();
     document.getElementById('last-update-time').textContent = now.toLocaleTimeString('id-ID');
   }
 
-  // Show notification
   function showNotification(message) {
     const notif = document.getElementById('notification');
     notif.textContent = message;
@@ -259,7 +231,6 @@
     setTimeout(() => { notif.style.opacity = '0'; }, 3000);
   }
 
-  // Render data ke tabel
   function renderDeliveryData(data = deliveryData) {
     const tbody = document.getElementById('delivery-data');
     tbody.innerHTML = '';
@@ -284,16 +255,14 @@
     });
   }
 
-  // Update summary dan charts
   function updateSummary() {
-    let totalVolume = 0, deliveredVolume = 0, pendingVolume = 0, cancelVolume = 0;
+    let totalVolume = 0, deliveredVolume = 0, pendingVolume = 0;
     let totalProjects = deliveryData.length;
 
     deliveryData.forEach(item => {
       totalVolume += item.qtyOrder;
       deliveredVolume += item.qtyDelivered;
       pendingVolume += item.qtyRemain;
-      if (item.status.toUpperCase() === 'CANCEL') cancelVolume += item.qtyOrder;
     });
 
     document.getElementById('total-volume').textContent = `${totalVolume.toFixed(2)} m³`;
@@ -301,13 +270,11 @@
     document.getElementById('pending-volume').textContent = `${pendingVolume.toFixed(2)} m³`;
     document.getElementById('total-projects').textContent = totalProjects;
 
-    // Update status chart
     if (statusChart) {
-      statusChart.data.datasets[0].data = [deliveredVolume, pendingVolume, cancelVolume];
+      statusChart.data.datasets[0].data = [deliveredVolume, pendingVolume];
       statusChart.update();
     }
 
-    // Update plant chart
     const plants = {};
     deliveryData.forEach(item => {
       plants[item.plant] = (plants[item.plant] || 0) + item.qtyOrder;
@@ -318,7 +285,6 @@
       plantChart.update();
     }
 
-    // Update volume per tanggal chart
     const volumePerDate = {};
     deliveryData.forEach(item => {
       volumePerDate[item.date] = (volumePerDate[item.date] || 0) + item.qtyOrder;
@@ -330,16 +296,17 @@
     }
   }
 
-  // Inisialisasi chart
+  let statusChart, volumeChart, plantChart;
+
   function initCharts() {
     const statusCtx = document.getElementById('statusChart').getContext('2d');
     statusChart = new Chart(statusCtx, {
       type: 'doughnut',
       data: {
-        labels: ['Terkirim', 'Tertunda', 'Dibatalkan'],
+        labels: ['Terkirim', 'Tertunda'],
         datasets: [{
-          data: [0, 0, 0],
-          backgroundColor: ['#2ecc71', '#f39c12', '#e74c3c'],
+          data: [0, 0],
+          backgroundColor: ['#2ecc71', '#f39c12'],
           borderWidth: 1
         }]
       },
@@ -350,4 +317,65 @@
     volumeChart = new Chart(volumeCtx, {
       type: 'bar',
       data: {
-        labels
+        labels: [],
+        datasets: [{
+          label: 'Volume Order',
+          data: [],
+          backgroundColor: '#3498db'
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
+
+    const plantCtx = document.getElementById('plantChart').getContext('2d');
+    plantChart = new Chart(plantCtx, {
+      type: 'pie',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Volume per Plant',
+          data: [],
+          backgroundColor: ['#3498db', '#9b59b6', '#e67e22', '#1abc9c', '#e74c3c']
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+    });
+  }
+
+  // Filter data sesuai input filter
+  function filterData() {
+    const startDateInput = document.getElementById('start-date').value;
+    const endDateInput = document.getElementById('end-date').value;
+    const plantFilter = document.getElementById('plant-filter').value.toUpperCase();
+    const statusFilter = document.getElementById('status-filter').value.toUpperCase();
+
+    let filtered = deliveryData;
+
+    if (startDateInput) {
+      const startDate = new Date(startDateInput);
+      filtered = filtered.filter(item => {
+        const d = parseDateString(item.date);
+        return d && d >= startDate;
+      });
+    }
+    if (endDateInput) {
+      const endDate = new Date(endDateInput);
+      filtered = filtered.filter(item => {
+        const d = parseDateString(item.date);
+        return d && d <= endDate;
+      });
+    }
+    if (plantFilter !== 'ALL') {
+      filtered = filtered.filter(item => item.plant.toUpperCase() === plantFilter);
+    }
+    if (statusFilter !== 'ALL') {
+      filtered = filtered.filter(item => item.status.toUpperCase() === statusFilter);
+    }
+
+    renderDeliveryData(filtered);
+    updateSummaryFiltered(filtered);
+  }
+
+  // Update summary untuk data filter
+  function updateSummaryFiltered(data) {
+    let totalVolume = 0, deliveredVolume = 
