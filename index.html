@@ -2,12 +2,12 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dashboard Monitoring Pengiriman Beton</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Monitoring - Filter Tanggal & Auto Update</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏗️</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
     <style>
         :root {
             --primary: #2c3e50;
@@ -32,43 +32,12 @@
             color: #333;
             line-height: 1.6;
             min-height: 100vh;
-            position: relative;
-        }
-        
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.3s ease;
-        }
-        
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid var(--light);
-            border-top: 5px solid var(--secondary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
         
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
-            opacity: 0;
-            transition: opacity 0.5s ease;
         }
         
         header {
@@ -264,6 +233,154 @@
             font-weight: 500;
         }
         
+        .filter-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .filter-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .filter-title h2 {
+            color: var(--primary);
+            margin-left: 10px;
+        }
+        
+        .filter-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .filter-group label {
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .filter-group input, .filter-group select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #dde4e6;
+        }
+        
+        .update-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4fc;
+            border-radius: 8px;
+        }
+        
+        .last-update {
+            display: flex;
+            align-items: center;
+        }
+        
+        .last-update i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+        
+        .auto-update {
+            display: flex;
+            align-items: center;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-left: 10px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--success);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
         footer {
             text-align: center;
             margin-top: 30px;
@@ -272,7 +389,6 @@
             font-size: 14px;
         }
         
-        /* Improved mobile responsiveness */
         @media (max-width: 768px) {
             .dashboard {
                 grid-template-columns: 1fr;
@@ -304,6 +420,15 @@
             .data-table th, .data-table td {
                 padding: 8px 10px;
             }
+            
+            .filter-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .update-section {
+                flex-direction: column;
+                gap: 15px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -326,10 +451,6 @@
     </style>
 </head>
 <body>
-    <div class="loading">
-        <div class="spinner"></div>
-    </div>
-
     <div class="container">
         <header>
             <div class="header-top">
@@ -339,28 +460,83 @@
                 </div>
                 <div class="date-filter">
                     <i class="far fa-calendar-alt"></i>
-                    <span>02 September 2025</span>
+                    <span id="current-date">02 September 2025</span>
                 </div>
             </div>
             <div class="header-stats">
                 <div class="stat-card">
                     <h3>Total Volume Order</h3>
-                    <div class="value">258 m³</div>
+                    <div class="value" id="total-volume">258 m³</div>
                 </div>
                 <div class="stat-card">
                     <h3>Volume Terkirim</h3>
-                    <div class="value">45 m³</div>
+                    <div class="value" id="delivered-volume">45 m³</div>
                 </div>
                 <div class="stat-card">
                     <h3>Volume Tertunda</h3>
-                    <div class="value">213 m³</div>
+                    <div class="value" id="pending-volume">213 m³</div>
                 </div>
                 <div class="stat-card">
                     <h3>Total Proyek</h3>
-                    <div class="value">9</div>
+                    <div class="value" id="total-projects">9</div>
                 </div>
             </div>
         </header>
+        
+        <div class="filter-section">
+            <div class="filter-title">
+                <i class="fas fa-filter"></i>
+                <h2>Filter Data</h2>
+            </div>
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label for="start-date">Dari Tanggal:</label>
+                    <input type="date" id="start-date" value="2025-09-01">
+                </div>
+                <div class="filter-group">
+                    <label for="end-date">Sampai Tanggal:</label>
+                    <input type="date" id="end-date" value="2025-09-05">
+                </div>
+                <div class="filter-group">
+                    <label for="plant-filter">Plant:</label>
+                    <select id="plant-filter">
+                        <option value="all">Semua Plant</option>
+                        <option value="denpasar">Denpasar 2</option>
+                        <option value="gianyar">Gianyar</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="status-filter">Status:</label>
+                    <select id="status-filter">
+                        <option value="all">Semua Status</option>
+                        <option value="delivered">Terkirim</option>
+                        <option value="pending">Tertunda</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-buttons">
+                <button class="btn btn-primary" id="apply-filter">
+                    <i class="fas fa-check"></i> Terapkan Filter
+                </button>
+                <button class="btn btn-secondary" id="reset-filter">
+                    <i class="fas fa-sync"></i> Reset Filter
+                </button>
+            </div>
+            
+            <div class="update-section">
+                <div class="last-update">
+                    <i class="fas fa-clock"></i>
+                    <span>Terakhir update: <span id="last-update-time">--:--:--</span></span>
+                </div>
+                <div class="auto-update">
+                    <span>Auto Update:</span>
+                    <label class="switch">
+                        <input type="checkbox" id="auto-update-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
         
         <div class="dashboard">
             <div class="card">
@@ -403,33 +579,33 @@
                 <div class="summary-content">
                     <div class="plant-summary">
                         <h3>Denpasar 2</h3>
-                        <p><strong>Volume Order:</strong> 167 m³</p>
-                        <p><strong>Volume Terkirim:</strong> 45 m³</p>
-                        <p><strong>Volume Tertunda:</strong> 122 m³</p>
-                        <p><strong>Proyek Tertunda:</strong> 5</p>
+                        <p><strong>Volume Order:</strong> <span id="denpasar-order">167</span> m³</p>
+                        <p><strong>Volume Terkirim:</strong> <span id="denpasar-delivered">45</span> m³</p>
+                        <p><strong>Volume Tertunda:</strong> <span id="denpasar-pending">122</span> m³</p>
+                        <p><strong>Proyek Tertunda:</strong> <span id="denpasar-projects">5</span></p>
                         
                         <div class="progress-bar">
-                            <div class="progress progress-delivered" style="width: 27%;"></div>
+                            <div class="progress progress-delivered" id="denpasar-progress"></div>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
-                            <span>Terkirim: 27%</span>
-                            <span>Tertunda: 73%</span>
+                            <span>Terkirim: <span id="denpasar-delivered-percent">27</span>%</span>
+                            <span>Tertunda: <span id="denpasar-pending-percent">73</span>%</span>
                         </div>
                     </div>
                     
                     <div class="plant-summary">
                         <h3>Gianyar</h3>
-                        <p><strong>Volume Order:</strong> 91 m³</p>
-                        <p><strong>Volume Terkirim:</strong> 0 m³</p>
-                        <p><strong>Volume Tertunda:</strong> 91 m³</p>
-                        <p><strong>Proyek Tertunda:</strong> 4</p>
+                        <p><strong>Volume Order:</strong> <span id="gianyar-order">91</span> m³</p>
+                        <p><strong>Volume Terkirim:</strong> <span id="gianyar-delivered">0</span> m³</p>
+                        <p><strong>Volume Tertunda:</strong> <span id="gianyar-pending">91</span> m³</p>
+                        <p><strong>Proyek Tertunda:</strong> <span id="gianyar-projects">4</span></p>
                         
                         <div class="progress-bar">
-                            <div class="progress progress-delivered" style="width: 0%;"></div>
+                            <div class="progress progress-delivered" id="gianyar-progress"></div>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
-                            <span>Terkirim: 0%</span>
-                            <span>Tertunda: 100%</span>
+                            <span>Terkirim: <span id="gianyar-delivered-percent">0</span>%</span>
+                            <span>Tertunda: <span id="gianyar-pending-percent">100</span>%</span>
                         </div>
                     </div>
                 </div>
@@ -455,7 +631,7 @@
                             <th>Qty Remain</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="delivery-data">
                         <tr>
                             <td>DENPASAR 2</td>
                             <td>02/09/2025</td>
@@ -517,19 +693,71 @@
     </div>
 
     <script>
-        // Simulate loading
+        // Data untuk simulasi update
+        let deliveryData = [
+            { plant: "DENPASAR 2", date: "02/09/2025", status: "DELIVERED", siteNo: "157529", siteName: "PT. Wijaya Kusuma Contractors - Jln. Pantai Batu Bolong...", qtyOrder: 36, qtyDelivered: 18, qtyRemain: 18 },
+            { plant: "DENPASAR 2", date: "02/09/2025", status: "DELIVERED", siteNo: "158296", siteName: "TUNAS NIAGA KONSTRUKSINDO - Proyek Private BE Villa...", qtyOrder: 5, qtyDelivered: 5, qtyRemain: 0 },
+            { plant: "DENPASAR 2", date: "02/09/2025", status: "PENDING", siteNo: "158514", siteName: "PT. CITRA GRAHA SELARAS - MITRA 10 IMAM BONJOL...", qtyOrder: 99, qtyDelivered: 0, qtyRemain: 99 },
+            { plant: "DENPASAR 2", date: "02/09/2025", status: "DELIVERED", siteNo: "158992", siteName: "Alvend Kita Mandiri - Erik Proyek Villa Padang Linjong", qtyOrder: 12, qtyDelivered: 12, qtyRemain: 0 },
+            { plant: "DENPASAR 2", date: "02/09/2025", status: "DELIVERED", siteNo: "158799", siteName: "JAYAMIXNI PT. MITRA BANGUN KONSTRUKSI MEGAH...", qtyOrder: 15, qtyDelivered: 10, qtyRemain: 5 },
+            { plant: "GIANYAR", date: "03/09/2025", status: "PENDING", siteNo: "159123", siteName: "PT. Bangun Sejahtera - Proyek Perumahan Taman Ayu", qtyOrder: 45, qtyDelivered: 0, qtyRemain: 45 },
+            { plant: "GIANYAR", date: "03/09/2025", status: "PENDING", siteNo: "159124", siteName: "CV. Mandiri Konstruksi - Pembangunan Ruko Melati", qtyOrder: 30, qtyDelivered: 0, qtyRemain: 30 },
+            { plant: "DENPASAR 2", date: "04/09/2025", status: "DELIVERED", siteNo: "159125", siteName: "PT. Adhi Karya - Proyek Jalan Tol Serpong", qtyOrder: 60, qtyDelivered: 25, qtyRemain: 35 }
+        ];
+
+        // Chart instances
+        let statusChart, volumeChart, plantChart;
+        let autoUpdateInterval;
+        
+        // Initialize the dashboard
         document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                document.querySelector('.loading').style.opacity = '0';
-                document.querySelector('.container').style.opacity = '1';
-                setTimeout(function() {
-                    document.querySelector('.loading').style.display = 'none';
-                }, 300);
-            }, 1000);
+            updateCurrentDate();
+            updateLastUpdateTime();
+            initCharts();
+            renderDeliveryData();
+            updateSummary();
             
+            // Set up event listeners
+            document.getElementById('apply-filter').addEventListener('click', applyFilters);
+            document.getElementById('reset-filter').addEventListener('click', resetFilters);
+            document.getElementById('auto-update-toggle').addEventListener('change', toggleAutoUpdate);
+            
+            // Set default date values to today and 7 days ago
+            const today = new Date();
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(today.getDate() - 7);
+            
+            document.getElementById('start-date').value = formatDate(sevenDaysAgo);
+            document.getElementById('end-date').value = formatDate(today);
+        });
+        
+        // Format date to YYYY-MM-DD for input[type="date"]
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        // Update current date display
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { day: '2-digit', month: 'long', year: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('id-ID', options);
+        }
+        
+        // Update last update time
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('id-ID');
+            document.getElementById('last-update-time').textContent = timeString;
+        }
+        
+        // Initialize charts
+        function initCharts() {
             // Status Pengiriman Chart
             const statusCtx = document.getElementById('statusChart').getContext('2d');
-            const statusChart = new Chart(statusCtx, {
+            statusChart = new Chart(statusCtx, {
                 type: 'doughnut',
                 data: {
                     labels: ['Terkirim', 'Tertunda', 'Dibatalkan'],
@@ -556,7 +784,7 @@
             
             // Volume per Tanggal Chart
             const volumeCtx = document.getElementById('volumeChart').getContext('2d');
-            const volumeChart = new Chart(volumeCtx, {
+            volumeChart = new Chart(volumeCtx, {
                 type: 'bar',
                 data: {
                     labels: ['25/08', '26/08', '27/08', '28/08', '29/08', '02/09'],
@@ -590,7 +818,7 @@
             
             // Performa per Plant Chart
             const plantCtx = document.getElementById('plantChart').getContext('2d');
-            const plantChart = new Chart(plantCtx, {
+            plantChart = new Chart(plantCtx, {
                 type: 'pie',
                 data: {
                     labels: ['Denpasar 2', 'Gianyar'],
@@ -613,7 +841,270 @@
                     }
                 }
             });
-        });
+        }
+        
+        // Render delivery data to table
+        function renderDeliveryData(data = deliveryData) {
+            const tableBody = document.getElementById('delivery-data');
+            tableBody.innerHTML = '';
+            
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                
+                // Determine status class
+                let statusClass = '';
+                if (item.status === 'DELIVERED') statusClass = 'status-delivered';
+                else if (item.status === 'PENDING') statusClass = 'status-pending';
+                else if (item.status === 'CANCEL') statusClass = 'status-cancel';
+                
+                row.innerHTML = `
+                    <td>${item.plant}</td>
+                    <td>${item.date}</td>
+                    <td class="${statusClass}">${item.status}</td>
+                    <td>${item.siteNo}</td>
+                    <td>${item.siteName}</td>
+                    <td>${item.qtyOrder}</td>
+                    <td>${item.qtyDelivered}</td>
+                    <td>${item.qtyRemain}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Update summary information
+        function updateSummary() {
+            // Calculate totals
+            let totalVolume = 0;
+            let deliveredVolume = 0;
+            let pendingVolume = 0;
+            let totalProjects = deliveryData.length;
+            
+            deliveryData.forEach(item => {
+                totalVolume += item.qtyOrder;
+                deliveredVolume += item.qtyDelivered;
+                pendingVolume += item.qtyRemain;
+            });
+            
+            // Update header stats
+            document.getElementById('total-volume').textContent = `${totalVolume} m³`;
+            document.getElementById('delivered-volume').textContent = `${deliveredVolume} m³`;
+            document.getElementById('pending-volume').textContent = `${pendingVolume} m³`;
+            document.getElementById('total-projects').textContent = totalProjects;
+            
+            // Calculate plant-specific stats
+            const denpasarData = deliveryData.filter(item => item.plant === 'DENPASAR 2');
+            const gianyarData = deliveryData.filter(item => item.plant === 'GIANYAR');
+            
+            let denpasarOrder = 0;
+            let denpasarDelivered = 0;
+            let denpasarPending = 0;
+            
+            denpasarData.forEach(item => {
+                denpasarOrder += item.qtyOrder;
+                denpasarDelivered += item.qtyDelivered;
+                denpasarPending += item.qtyRemain;
+            });
+            
+            let gianyarOrder = 0;
+            let gianyarDelivered = 0;
+            let gianyarPending = 0;
+            
+            gianyarData.forEach(item => {
+                gianyarOrder += item.qtyOrder;
+                gianyarDelivered += item.qtyDelivered;
+                gianyarPending += item.qtyRemain;
+            });
+            
+            // Update plant summaries
+            document.getElementById('denpasar-order').textContent = denpasarOrder;
+            document.getElementById('denpasar-delivered').textContent = denpasarDelivered;
+            document.getElementById('denpasar-pending').textContent = denpasarPending;
+            document.getElementById('denpasar-projects').textContent = denpasarData.length;
+            
+            document.getElementById('gianyar-order').textContent = gianyarOrder;
+            document.getElementById('gianyar-delivered').textContent = gianyarDelivered;
+            document.getElementById('gianyar-pending').textContent = gianyarPending;
+            document.getElementById('gianyar-projects').textContent = gianyarData.length;
+            
+            // Calculate percentages
+            const denpasarDeliveredPercent = denpasarOrder > 0 ? Math.round((denpasarDelivered / denpasarOrder) * 100) : 0;
+            const denpasarPendingPercent = denpasarOrder > 0 ? 100 - denpasarDeliveredPercent : 0;
+            
+            const gianyarDeliveredPercent = gianyarOrder > 0 ? Math.round((gianyarDelivered / gianyarOrder) * 100) : 0;
+            const gianyarPendingPercent = gianyarOrder > 0 ? 100 - gianyarDeliveredPercent : 0;
+            
+            // Update percentages and progress bars
+            document.getElementById('denpasar-delivered-percent').textContent = denpasarDeliveredPercent;
+            document.getElementById('denpasar-pending-percent').textContent = denpasarPendingPercent;
+            document.getElementById('denpasar-progress').style.width = `${denpasarDeliveredPercent}%`;
+            
+            document.getElementById('gianyar-delivered-percent').textContent = gianyarDeliveredPercent;
+            document.getElementById('gianyar-pending-percent').textContent = gianyarPendingPercent;
+            document.getElementById('gianyar-progress').style.width = `${gianyarDeliveredPercent}%`;
+            
+            // Update charts
+            updateCharts(totalVolume, deliveredVolume, pendingVolume, denpasarOrder, gianyarOrder);
+        }
+        
+        // Update charts with new data
+        function updateCharts(totalVolume, deliveredVolume, pendingVolume, denpasarOrder, gianyarOrder) {
+            // Update status chart
+            statusChart.data.datasets[0].data = [deliveredVolume, pendingVolume, 0];
+            statusChart.update();
+            
+            // Update plant chart
+            plantChart.data.datasets[0].data = [denpasarOrder, gianyarOrder];
+            plantChart.update();
+        }
+        
+        // Apply filters to the data
+        function applyFilters() {
+            const startDate = new Date(document.getElementById('start-date').value);
+            const endDate = new Date(document.getElementById('end-date').value);
+            const plantFilter = document.getElementById('plant-filter').value;
+            const statusFilter = document.getElementById('status-filter').value;
+            
+            // Filter data based on criteria
+            let filteredData = deliveryData.filter(item => {
+                const itemDateParts = item.date.split('/');
+                const itemDate = new Date(`${itemDateParts[1]}/${itemDateParts[0]}/${itemDateParts[2]}`);
+                
+                // Date filter
+                if (itemDate < startDate || itemDate > endDate) return false;
+                
+                // Plant filter
+                if (plantFilter !== 'all') {
+                    const plantValue = plantFilter === 'denpasar' ? 'DENPASAR 2' : 'GIANYAR';
+                    if (item.plant !== plantValue) return false;
+                }
+                
+                // Status filter
+                if (statusFilter !== 'all') {
+                    const statusValue = statusFilter === 'delivered' ? 'DELIVERED' : 'PENDING';
+                    if (item.status !== statusValue) return false;
+                }
+                
+                return true;
+            });
+            
+            // Render filtered data
+            renderDeliveryData(filteredData);
+            
+            // Show notification
+            showNotification(`Filter diterapkan. Menampilkan ${filteredData.length} data.`);
+        }
+        
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('start-date').value = '';
+            document.getElementById('end-date').value = '';
+            document.getElementById('plant-filter').value = 'all';
+            document.getElementById('status-filter').value = 'all';
+            
+            // Render all data
+            renderDeliveryData(deliveryData);
+            
+            // Show notification
+            showNotification('Filter direset. Menampilkan semua data.');
+        }
+        
+        // Toggle auto-update
+        function toggleAutoUpdate() {
+            const autoUpdateToggle = document.getElementById('auto-update-toggle');
+            
+            if (autoUpdateToggle.checked) {
+                // Start auto-update
+                autoUpdateInterval = setInterval(updateData, 10000); // Update every 10 seconds
+                showNotification('Auto-update diaktifkan. Data akan diperbarui setiap 10 detik.');
+            } else {
+                // Stop auto-update
+                clearInterval(autoUpdateInterval);
+                showNotification('Auto-update dimatikan.');
+            }
+        }
+        
+        // Simulate data update
+        function updateData() {
+            // Simulate new data arriving
+            const newData = [...deliveryData];
+            
+            // Randomly update some values
+            newData.forEach(item => {
+                if (item.status === 'PENDING' && Math.random() > 0.7) {
+                    // Simulate some deliveries
+                    const delivered = Math.min(item.qtyRemain, Math.floor(Math.random() * 10) + 5);
+                    item.qtyDelivered += delivered;
+                    item.qtyRemain -= delivered;
+                    
+                    if (item.qtyRemain === 0) {
+                        item.status = 'DELIVERED';
+                    }
+                }
+            });
+            
+            // Occasionally add new orders
+            if (Math.random() > 0.5) {
+                const plants = ['DENPASAR 2', 'GIANYAR'];
+                const statuses = ['PENDING', 'DELIVERED'];
+                
+                const newOrder = {
+                    plant: plants[Math.floor(Math.random() * plants.length)],
+                    date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+                    status: 'PENDING',
+                    siteNo: Math.floor(160000 + Math.random() * 1000).toString(),
+                    siteName: `Proyek Baru - ${Math.floor(Math.random() * 1000)}`,
+                    qtyOrder: Math.floor(Math.random() * 50) + 10,
+                    qtyDelivered: 0,
+                    qtyRemain: Math.floor(Math.random() * 50) + 10
+                };
+                
+                newData.push(newOrder);
+            }
+            
+            deliveryData = newData;
+            
+            // Update the UI
+            updateLastUpdateTime();
+            renderDeliveryData();
+            updateSummary();
+            
+            // Show notification
+            showNotification('Data diperbarui secara otomatis.');
+        }
+        
+        // Show notification
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.backgroundColor = '#2c3e50';
+            notification.style.color = 'white';
+            notification.style.padding = '10px 15px';
+            notification.style.borderRadius = '5px';
+            notification.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            notification.style.zIndex = '1000';
+            notification.style.opacity = '0';
+            notification.style.transition = 'opacity 0.3s ease';
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.opacity = '1';
+            }, 10);
+            
+            // Animate out and remove after 3 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
     </script>
 </body>
 </html>
