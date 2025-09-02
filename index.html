@@ -2,109 +2,182 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futuristic Delivery Monitoring</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dashboard Monitoring Pengiriman Beton</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏗️</text></svg>">
     <style>
         :root {
-            --primary: #0a0e17;
-            --secondary: #1a1f2e;
-            --accent: #00d4ff;
-            --accent-secondary: #ff4d7c;
-            --text: #ffffff;
-            --text-secondary: #a0aec0;
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --gray: #7f8c8d;
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, var(--primary) 0%, #0d1323 100%);
-            color: var(--text);
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
             min-height: 100vh;
+            position: relative;
+        }
+        
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--light);
+            border-top: 5px solid var(--secondary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
             padding: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            margin-left: 10px;
+        }
+        
+        .date-filter {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .date-filter i {
+            margin-right: 8px;
+        }
+        
+        .header-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card h3 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: 700;
         }
         
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
-            max-width: 1800px;
-            margin: 0 auto;
+            margin-bottom: 20px;
         }
         
         .card {
-            background: rgba(26, 31, 46, 0.8);
-            border-radius: 16px;
+            background: white;
+            border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 212, 255, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
         
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
             padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .card-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--accent);
+        .card-header h2 {
+            font-size: 18px;
+            color: var(--primary);
         }
         
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+        .card-content {
+            height: 250px;
         }
         
-        .stat-box {
-            background: rgba(0, 212, 255, 0.1);
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        
-        .stat-box:hover {
-            background: rgba(0, 212, 255, 0.15);
-            transform: scale(1.02);
-        }
-        
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            margin: 10px 0;
-            color: var(--accent);
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-        
-        .chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-        }
-        
-        .summary-card {
+        .summary {
             grid-column: 1 / -1;
         }
         
@@ -114,283 +187,433 @@
             gap: 20px;
         }
         
-        .summary-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 15px;
+        .plant-summary {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
         }
         
-        .summary-title {
-            font-size: 1rem;
-            color: var(--accent-secondary);
-            margin-bottom: 10px;
+        .plant-summary:hover {
+            transform: translateY(-3px);
+        }
+        
+        .plant-summary h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
         }
         
         .progress-bar {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
             margin: 10px 0;
+            overflow: hidden;
         }
         
-        .progress-fill {
+        .progress {
             height: 100%;
-            background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
-            border-radius: 4px;
+            border-radius: 5px;
         }
         
-        .glow {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: radial-gradient(var(--accent), transparent 70%);
-            opacity: 0.05;
-            filter: blur(40px);
-            z-index: -1;
+        .progress-delivered {
+            background: var(--success);
         }
         
+        .progress-remaining {
+            background: var(--warning);
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .data-table th {
+            background-color: var(--light);
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .status-delivered {
+            color: var(--success);
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            color: var(--warning);
+            font-weight: 500;
+        }
+        
+        .status-cancel {
+            color: var(--accent);
+            font-weight: 500;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        /* Improved mobile responsiveness */
         @media (max-width: 768px) {
             .dashboard {
                 grid-template-columns: 1fr;
+            }
+            
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .date-filter {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .header-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .card-content {
+                height: 200px;
+            }
+            
+            .data-table {
+                font-size: 14px;
+            }
+            
+            .data-table th, .data-table td {
+                padding: 8px 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .logo h1 {
+                font-size: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="dashboard">
-        <!-- Header Section -->
-        <div class="card" style="grid-column: 1 / -1;">
-            <div class="card-header">
-                <h1>DAILY DELIVERY MONITORING</h1>
-                <div id="current-date">02/09/2023</div>
+    <div class="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <div class="logo">
+                    <i class="fas fa-hard-hat fa-2x"></i>
+                    <h1>Monitoring Pengiriman Beton</h1>
+                </div>
+                <div class="date-filter">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>02 September 2025</span>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-card">
+                    <h3>Total Volume Order</h3>
+                    <div class="value">258 m³</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Volume Terkirim</h3>
+                    <div class="value">45 m³</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Volume Tertunda</h3>
+                    <div class="value">213 m³</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Proyek</h3>
+                    <div class="value">9</div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Status Pengiriman</h2>
+                    <i class="fas fa-truck-loading"></i>
+                </div>
+                <div class="card-content">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Volume per Tanggal</h2>
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="card-content">
+                    <canvas id="volumeChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Performa per Plant</h2>
+                    <i class="fas fa-industry"></i>
+                </div>
+                <div class="card-content">
+                    <canvas id="plantChart"></canvas>
+                </div>
             </div>
         </div>
         
-        <!-- Stats Overview -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">DELIVERY OVERVIEW</div>
-            </div>
-            <div class="stat-grid">
-                <div class="stat-box">
-                    <div class="stat-label">TOTAL PROJECT</div>
-                    <div class="stat-value" id="total-project">12</div>
+        <div class="summary">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Ringkasan Harian</h2>
+                    <i class="fas fa-file-alt"></i>
                 </div>
-                <div class="stat-box">
-                    <div class="stat-label">PROJECT REMAIN</div>
-                    <div class="stat-value" id="project-remain">6</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-label">VOLUME ORDER (M³)</div>
-                    <div class="stat-value" id="volume-order">433.5</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-label">VOLUME CANCEL (M³)</div>
-                    <div class="stat-value" id="volume-cancel">87.5</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Delivery Performance -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">DELIVERY PERFORMANCE</div>
-            </div>
-            <div class="stat-grid">
-                <div class="stat-box">
-                    <div class="stat-label">VOLUME DELIVERED (M³)</div>
-                    <div class="stat-value" id="volume-delivered">343</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-label">VOLUME REMAIN (M³)</div>
-                    <div class="stat-value" id="volume-remain">433.5</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-label">STATUS ORDER (M³)</div>
-                    <div class="stat-value" id="status-order">68</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-label">PERFORMANCE RATE</div>
-                    <div class="stat-value" id="performance-rate">79%</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Volume Chart -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">VOLUME ORDER VS DELIVERED</div>
-            </div>
-            <div class="chart-container">
-                <canvas id="volumeChart"></canvas>
-            </div>
-        </div>
-        
-        <!-- Delivery Progress -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">DELIVERY PROGRESS</div>
-            </div>
-            <div class="chart-container">
-                <canvas id="deliveryChart"></canvas>
-            </div>
-        </div>
-        
-        <!-- Daily Summary -->
-        <div class="card summary-card">
-            <div class="card-header">
-                <div class="card-title">DAILY DELIVERY SUMMARY - 02/09</div>
-            </div>
-            <div class="summary-content">
-                <div class="summary-item">
-                    <div class="summary-title">DENPASAR 2</div>
-                    <div>Volume Order: <strong>167 M³</strong></div>
-                    <div>Volume Delivered: <strong>45 M³</strong></div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 27%"></div>
+                <div class="summary-content">
+                    <div class="plant-summary">
+                        <h3>Denpasar 2</h3>
+                        <p><strong>Volume Order:</strong> 167 m³</p>
+                        <p><strong>Volume Terkirim:</strong> 45 m³</p>
+                        <p><strong>Volume Tertunda:</strong> 122 m³</p>
+                        <p><strong>Proyek Tertunda:</strong> 5</p>
+                        
+                        <div class="progress-bar">
+                            <div class="progress progress-delivered" style="width: 27%;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Terkirim: 27%</span>
+                            <span>Tertunda: 73%</span>
+                        </div>
                     </div>
-                    <div>Volume Remain: <strong style="color: var(--accent-secondary)">122 M³</strong></div>
-                    <div>Project Remain: <strong>5 Projects</strong></div>
-                </div>
-                
-                <div class="summary-item">
-                    <div class="summary-title">GIANYAR</div>
-                    <div>Volume Order: <strong>91 M³</strong></div>
-                    <div>Volume Delivered: <strong>0 M³</strong></div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 0%"></div>
+                    
+                    <div class="plant-summary">
+                        <h3>Gianyar</h3>
+                        <p><strong>Volume Order:</strong> 91 m³</p>
+                        <p><strong>Volume Terkirim:</strong> 0 m³</p>
+                        <p><strong>Volume Tertunda:</strong> 91 m³</p>
+                        <p><strong>Proyek Tertunda:</strong> 4</p>
+                        
+                        <div class="progress-bar">
+                            <div class="progress progress-delivered" style="width: 0%;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Terkirim: 0%</span>
+                            <span>Tertunda: 100%</span>
+                        </div>
                     </div>
-                    <div>Volume Remain: <strong style="color: var(--accent-secondary)">91 M³</strong></div>
-                    <div>Project Remain: <strong>4 Projects</strong></div>
-                </div>
-                
-                <div class="summary-item">
-                    <div class="summary-title">TOTAL SUMMARY</div>
-                    <div>Total Project: <strong>12 Projects</strong></div>
-                    <div>Volume Order: <strong>258 M³</strong></div>
-                    <div>Volume Delivered: <strong>45 M³</strong></div>
-                    <div>Volume Cancel: <strong>0 M³</strong></div>
-                    <div>Volume Remain: <strong>213 M³</strong></div>
                 </div>
             </div>
         </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>Data Pengiriman Terbaru</h2>
+                <i class="fas fa-list"></i>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Plant</th>
+                            <th>Tanggal</th>
+                            <th>Status</th>
+                            <th>Site No</th>
+                            <th>Site Name</th>
+                            <th>Qty Order</th>
+                            <th>Qty Delivered</th>
+                            <th>Qty Remain</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>DENPASAR 2</td>
+                            <td>02/09/2025</td>
+                            <td class="status-delivered">DELIVERED</td>
+                            <td>157529</td>
+                            <td>PT. Wijaya Kusuma Contractors - Jln. Pantai Batu Bolong...</td>
+                            <td>36</td>
+                            <td>18</td>
+                            <td>18</td>
+                        </tr>
+                        <tr>
+                            <td>DENPASAR 2</td>
+                            <td>02/09/2025</td>
+                            <td class="status-delivered">DELIVERED</td>
+                            <td>158296</td>
+                            <td>TUNAS NIAGA KONSTRUKSINDO - Proyek Private BE Villa...</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>DENPASAR 2</td>
+                            <td>02/09/2025</td>
+                            <td class="status-pending">PENDING</td>
+                            <td>158514</td>
+                            <td>PT. CITRA GRAHA SELARAS - MITRA 10 IMAM BONJOL...</td>
+                            <td>99</td>
+                            <td>0</td>
+                            <td>99</td>
+                        </tr>
+                        <tr>
+                            <td>DENPASAR 2</td>
+                            <td>02/09/2025</td>
+                            <td class="status-delivered">DELIVERED</td>
+                            <td>158992</td>
+                            <td>Alvend Kita Mandiri - Erik Proyek Villa Padang Linjong</td>
+                            <td>12</td>
+                            <td>12</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>DENPASAR 2</td>
+                            <td>02/09/2025</td>
+                            <td class="status-delivered">DELIVERED</td>
+                            <td>158799</td>
+                            <td>JAYAMIXNI PT. MITRA BANGUN KONSTRUKSI MEGAH...</td>
+                            <td>15</td>
+                            <td>10</td>
+                            <td>5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Dashboard Monitoring Pengiriman Beton &copy; 2025 - Divisi Logistik</p>
+        </footer>
     </div>
 
     <script>
-        // Set current date
-        document.getElementById('current-date').textContent = new Date().toLocaleDateString('id-ID', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        });
-        
-        // Volume Order vs Delivered Chart
-        const volumeCtx = document.getElementById('volumeChart').getContext('2d');
-        const volumeChart = new Chart(volumeCtx, {
-            type: 'bar',
-            data: {
-                labels: ['25/08', '26/08', '27/08', '28/08', '29/08', '02/09'],
-                datasets: [
-                    {
-                        label: 'Volume Order (M³)',
-                        data: [120, 180, 150, 200, 160, 258],
-                        backgroundColor: 'rgba(0, 212, 255, 0.5)',
-                        borderColor: 'rgba(0, 212, 255, 1)',
+        // Simulate loading
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                document.querySelector('.loading').style.opacity = '0';
+                document.querySelector('.container').style.opacity = '1';
+                setTimeout(function() {
+                    document.querySelector('.loading').style.display = 'none';
+                }, 300);
+            }, 1000);
+            
+            // Status Pengiriman Chart
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            const statusChart = new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Terkirim', 'Tertunda', 'Dibatalkan'],
+                    datasets: [{
+                        data: [45, 213, 0],
+                        backgroundColor: [
+                            '#2ecc71',
+                            '#f39c12',
+                            '#e74c3c'
+                        ],
                         borderWidth: 1
-                    },
-                    {
-                        label: 'Volume Delivered (M³)',
-                        data: [100, 150, 120, 180, 140, 45],
-                        backgroundColor: 'rgba(255, 77, 124, 0.5)',
-                        borderColor: 'rgba(255, 77, 124, 1)',
-                        borderWidth: 1
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        }
-                    }
+                    }]
                 },
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#fff'
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
                         }
                     }
                 }
-            }
-        });
-        
-        // Delivery Progress Chart
-        const deliveryCtx = document.getElementById('deliveryChart').getContext('2d');
-        const deliveryChart = new Chart(deliveryCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Delivered', 'Remaining', 'Cancelled'],
-                datasets: [{
-                    data: [343, 433.5, 87.5],
-                    backgroundColor: [
-                        'rgba(0, 212, 255, 0.8)',
-                        'rgba(255, 77, 124, 0.8)',
-                        'rgba(160, 174, 192, 0.8)'
-                    ],
-                    borderColor: [
-                        'rgba(0, 212, 255, 1)',
-                        'rgba(255, 77, 124, 1)',
-                        'rgba(160, 174, 192, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            color: '#fff',
-                            padding: 20
-                        }
-                    }
-                }
-            }
-        });
-        
-        // Add glowing effects
-        function createGlowEffects() {
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => {
-                const glow = document.createElement('div');
-                glow.classList.add('glow');
-                card.appendChild(glow);
-                
-                card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    
-                    glow.style.left = `${x - 150}px`;
-                    glow.style.top = `${y - 150}px`;
-                });
             });
-        }
-        
-        createGlowEffects();
+            
+            // Volume per Tanggal Chart
+            const volumeCtx = document.getElementById('volumeChart').getContext('2d');
+            const volumeChart = new Chart(volumeCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['25/08', '26/08', '27/08', '28/08', '29/08', '02/09'],
+                    datasets: [
+                        {
+                            label: 'Volume Order',
+                            data: [433.5, 87.5, 0, 0, 0, 258],
+                            backgroundColor: '#3498db',
+                            borderColor: '#2980b9',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Volume Terkirim',
+                            data: [0, 0, 0, 0, 0, 45],
+                            backgroundColor: '#2ecc71',
+                            borderColor: '#27ae60',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Performa per Plant Chart
+            const plantCtx = document.getElementById('plantChart').getContext('2d');
+            const plantChart = new Chart(plantCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Denpasar 2', 'Gianyar'],
+                    datasets: [{
+                        data: [167, 91],
+                        backgroundColor: [
+                            '#3498db',
+                            '#9b59b6'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        });
     </script>
 </body>
 </html>
