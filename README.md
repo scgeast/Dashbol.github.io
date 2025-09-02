@@ -1,1 +1,397 @@
 # Dashbol.github.io
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic Delivery Monitoring</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #0a0e17;
+            --secondary: #1a1f2e;
+            --accent: #00d4ff;
+            --accent-secondary: #ff4d7c;
+            --text: #ffffff;
+            --text-secondary: #a0aec0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary) 0%, #0d1323 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: rgba(26, 31, 46, 0.8);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 212, 255, 0.2);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-box {
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-box:hover {
+            background: rgba(0, 212, 255, 0.15);
+            transform: scale(1.02);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 10px 0;
+            color: var(--accent);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        .summary-card {
+            grid-column: 1 / -1;
+        }
+        
+        .summary-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .summary-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+        }
+        
+        .summary-title {
+            font-size: 1rem;
+            color: var(--accent-secondary);
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+            border-radius: 4px;
+        }
+        
+        .glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(var(--accent), transparent 70%);
+            opacity: 0.05;
+            filter: blur(40px);
+            z-index: -1;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header Section -->
+        <div class="card" style="grid-column: 1 / -1;">
+            <div class="card-header">
+                <h1>DAILY DELIVERY MONITORING</h1>
+                <div id="current-date">02/09/2023</div>
+            </div>
+        </div>
+        
+        <!-- Stats Overview -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">DELIVERY OVERVIEW</div>
+            </div>
+            <div class="stat-grid">
+                <div class="stat-box">
+                    <div class="stat-label">TOTAL PROJECT</div>
+                    <div class="stat-value" id="total-project">12</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">PROJECT REMAIN</div>
+                    <div class="stat-value" id="project-remain">6</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">VOLUME ORDER (M³)</div>
+                    <div class="stat-value" id="volume-order">433.5</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">VOLUME CANCEL (M³)</div>
+                    <div class="stat-value" id="volume-cancel">87.5</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Delivery Performance -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">DELIVERY PERFORMANCE</div>
+            </div>
+            <div class="stat-grid">
+                <div class="stat-box">
+                    <div class="stat-label">VOLUME DELIVERED (M³)</div>
+                    <div class="stat-value" id="volume-delivered">343</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">VOLUME REMAIN (M³)</div>
+                    <div class="stat-value" id="volume-remain">433.5</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">STATUS ORDER (M³)</div>
+                    <div class="stat-value" id="status-order">68</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">PERFORMANCE RATE</div>
+                    <div class="stat-value" id="performance-rate">79%</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Volume Chart -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">VOLUME ORDER VS DELIVERED</div>
+            </div>
+            <div class="chart-container">
+                <canvas id="volumeChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Delivery Progress -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">DELIVERY PROGRESS</div>
+            </div>
+            <div class="chart-container">
+                <canvas id="deliveryChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Daily Summary -->
+        <div class="card summary-card">
+            <div class="card-header">
+                <div class="card-title">DAILY DELIVERY SUMMARY - 02/09</div>
+            </div>
+            <div class="summary-content">
+                <div class="summary-item">
+                    <div class="summary-title">DENPASAR 2</div>
+                    <div>Volume Order: <strong>167 M³</strong></div>
+                    <div>Volume Delivered: <strong>45 M³</strong></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 27%"></div>
+                    </div>
+                    <div>Volume Remain: <strong style="color: var(--accent-secondary)">122 M³</strong></div>
+                    <div>Project Remain: <strong>5 Projects</strong></div>
+                </div>
+                
+                <div class="summary-item">
+                    <div class="summary-title">GIANYAR</div>
+                    <div>Volume Order: <strong>91 M³</strong></div>
+                    <div>Volume Delivered: <strong>0 M³</strong></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div>Volume Remain: <strong style="color: var(--accent-secondary)">91 M³</strong></div>
+                    <div>Project Remain: <strong>4 Projects</strong></div>
+                </div>
+                
+                <div class="summary-item">
+                    <div class="summary-title">TOTAL SUMMARY</div>
+                    <div>Total Project: <strong>12 Projects</strong></div>
+                    <div>Volume Order: <strong>258 M³</strong></div>
+                    <div>Volume Delivered: <strong>45 M³</strong></div>
+                    <div>Volume Cancel: <strong>0 M³</strong></div>
+                    <div>Volume Remain: <strong>213 M³</strong></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set current date
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('id-ID', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+        
+        // Volume Order vs Delivered Chart
+        const volumeCtx = document.getElementById('volumeChart').getContext('2d');
+        const volumeChart = new Chart(volumeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['25/08', '26/08', '27/08', '28/08', '29/08', '02/09'],
+                datasets: [
+                    {
+                        label: 'Volume Order (M³)',
+                        data: [120, 180, 150, 200, 160, 258],
+                        backgroundColor: 'rgba(0, 212, 255, 0.5)',
+                        borderColor: 'rgba(0, 212, 255, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Volume Delivered (M³)',
+                        data: [100, 150, 120, 180, 140, 45],
+                        backgroundColor: 'rgba(255, 77, 124, 0.5)',
+                        borderColor: 'rgba(255, 77, 124, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#fff'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Delivery Progress Chart
+        const deliveryCtx = document.getElementById('deliveryChart').getContext('2d');
+        const deliveryChart = new Chart(deliveryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Delivered', 'Remaining', 'Cancelled'],
+                datasets: [{
+                    data: [343, 433.5, 87.5],
+                    backgroundColor: [
+                        'rgba(0, 212, 255, 0.8)',
+                        'rgba(255, 77, 124, 0.8)',
+                        'rgba(160, 174, 192, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(0, 212, 255, 1)',
+                        'rgba(255, 77, 124, 1)',
+                        'rgba(160, 174, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#fff',
+                            padding: 20
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Add glowing effects
+        function createGlowEffects() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const glow = document.createElement('div');
+                glow.classList.add('glow');
+                card.appendChild(glow);
+                
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    glow.style.left = `${x - 150}px`;
+                    glow.style.top = `${y - 150}px`;
+                });
+            });
+        }
+        
+        createGlowEffects();
+    </script>
+</body>
+</html>
