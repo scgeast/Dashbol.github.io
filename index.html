@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Monitoring Project</title>
+    <title>Dashboard Monitoring Pengiriman Beton</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
     <style>
         :root {
             --primary: #2c3e50;
@@ -31,12 +32,12 @@
             color: #333;
             line-height: 1.6;
             min-height: 100vh;
-            padding: 20px;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 20px;
         }
         
         header {
@@ -52,8 +53,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
             margin-bottom: 15px;
+            flex-wrap: wrap;
         }
         
         .logo {
@@ -74,6 +75,10 @@
             align-items: center;
         }
         
+        .date-filter i {
+            margin-right: 8px;
+        }
+        
         .header-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -86,6 +91,11 @@
             border-radius: 8px;
             text-align: center;
             backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
         
         .stat-card h3 {
@@ -111,6 +121,12 @@
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
         
         .card-header {
@@ -166,6 +182,7 @@
             margin-bottom: 5px;
             font-weight: 500;
             color: var(--dark);
+            font-size: 14px;
         }
         
         .filter-group input, .filter-group select {
@@ -188,6 +205,9 @@
             cursor: pointer;
             font-weight: 500;
             transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         .btn-primary {
@@ -208,6 +228,248 @@
             background-color: #dde4e6;
         }
         
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-danger {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .update-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4fc;
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .last-update {
+            display: flex;
+            align-items: center;
+        }
+        
+        .last-update i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+        
+        .auto-update {
+            display: flex;
+            align-items: center;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-left: 10px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--success);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .summary {
+            grid-column: 1 / -1;
+        }
+        
+        .summary-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .plant-summary {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .plant-summary:hover {
+            transform: translateY(-3px);
+        }
+        
+        .plant-summary h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            border-radius: 5px;
+        }
+        
+        .progress-delivered {
+            background: var(--success);
+        }
+        
+        .progress-remaining {
+            background: var(--warning);
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .data-table th {
+            background-color: var(--light);
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .status-delivered {
+            color: var(--success);
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            color: var(--warning);
+            font-weight: 500;
+        }
+        
+        .status-cancel {
+            color: var(--accent);
+            font-weight: 500;
+        }
+        
+        .input-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: end;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 14px;
+        }
+        
+        .input-group input, .input-group select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .action-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-edit {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .btn-delete {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-save {
+            background-color: var(--success);
+            color: white;
+        }
+        
         footer {
             text-align: center;
             margin-top: 30px;
@@ -216,7 +478,17 @@
             font-size: 14px;
         }
         
+        @media (max-width: 1200px) {
+            .input-row {
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+            }
+        }
+        
         @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
             .header-top {
                 flex-direction: column;
                 align-items: flex-start;
@@ -236,8 +508,25 @@
                 height: 200px;
             }
             
+            .data-table {
+                font-size: 14px;
+            }
+            
+            .data-table th, .data-table td {
+                padding: 8px 10px;
+            }
+            
             .filter-controls {
                 grid-template-columns: 1fr;
+            }
+            
+            .update-section {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .input-row {
+                grid-template-columns: 1fr 1fr;
             }
         }
         
@@ -257,6 +546,10 @@
             .logo h1 {
                 font-size: 20px;
             }
+            
+            .input-row {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -265,8 +558,8 @@
         <header>
             <div class="header-top">
                 <div class="logo">
-                    <i class="fas fa-chart-line fa-2x"></i>
-                    <h1>Dashboard Monitoring Project</h1>
+                    <i class="fas fa-hard-hat fa-2x"></i>
+                    <h1>Monitoring Pengiriman Beton</h1>
                 </div>
                 <div class="date-filter">
                     <i class="far fa-calendar-alt"></i>
@@ -275,23 +568,80 @@
             </div>
             <div class="header-stats">
                 <div class="stat-card">
-                    <h3>Total Projects</h3>
-                    <div class="value" id="total-projects">12</div>
+                    <h3>Total Volume Order</h3>
+                    <div class="value" id="total-volume">0 m³</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Completed</h3>
-                    <div class="value" id="completed-projects">8</div>
+                    <h3>Volume Terkirim</h3>
+                    <div class="value" id="delivered-volume">0 m³</div>
                 </div>
                 <div class="stat-card">
-                    <h3>In Progress</h3>
-                    <div class="value" id="progress-projects">4</div>
+                    <h3>Volume Tertunda</h3>
+                    <div class="value" id="pending-volume">0 m³</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Success Rate</h3>
-                    <div class="value" id="success-rate">92%</div>
+                    <h3>Total Proyek</h3>
+                    <div class="value" id="total-projects">0</div>
                 </div>
             </div>
         </header>
+        
+        <div class="input-section">
+            <div class="filter-title">
+                <i class="fas fa-plus-circle"></i>
+                <h2>Input Data Pengiriman</h2>
+            </div>
+            
+            <div class="input-row">
+                <div class="input-group">
+                    <label for="input-plant">Plant</label>
+                    <select id="input-plant">
+                        <option value="DENPASAR 2">Denpasar 2</option>
+                        <option value="GIANYAR">Gianyar</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="input-date">Tanggal</label>
+                    <input type="date" id="input-date" value="2025-09-02">
+                </div>
+                
+                <div class="input-group">
+                    <label for="input-status">Status</label>
+                    <select id="input-status">
+                        <option value="DELIVERED">Terkirim</option>
+                        <option value="PENDING">Tertunda</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="input-siteNo">Site No</label>
+                    <input type="text" id="input-siteNo" placeholder="Nomor Site">
+                </div>
+                
+                <div class="input-group">
+                    <label for="input-siteName">Site Name</label>
+                    <input type="text" id="input-siteName" placeholder="Nama Site">
+                </div>
+                
+                <div class="input-group">
+                    <label for="input-qtyOrder">Qty Order (m³)</label>
+                    <input type="number" id="input-qtyOrder" placeholder="Volume Order">
+                </div>
+                
+                <div class="input-group">
+                    <label for="input-qtyDelivered">Qty Terkirim (m³)</label>
+                    <input type="number" id="input-qtyDelivered" placeholder="Volume Terkirim">
+                </div>
+                
+                <div class="input-group">
+                    <label>&nbsp;</label>
+                    <button class="btn btn-success" id="add-data">
+                        <i class="fas fa-plus"></i> Tambah
+                    </button>
+                </div>
+            </div>
+        </div>
         
         <div class="filter-section">
             <div class="filter-title">
@@ -300,37 +650,62 @@
             </div>
             <div class="filter-controls">
                 <div class="filter-group">
-                    <label for="start-date">From Date:</label>
+                    <label for="start-date">Dari Tanggal:</label>
                     <input type="date" id="start-date" value="2025-09-01">
                 </div>
                 <div class="filter-group">
-                    <label for="end-date">To Date:</label>
+                    <label for="end-date">Sampai Tanggal:</label>
                     <input type="date" id="end-date" value="2025-09-05">
+                </div>
+                <div class="filter-group">
+                    <label for="plant-filter">Plant:</label>
+                    <select id="plant-filter">
+                        <option value="all">Semua Plant</option>
+                        <option value="DENPASAR 2">Denpasar 2</option>
+                        <option value="GIANYAR">Gianyar</option>
+                    </select>
                 </div>
                 <div class="filter-group">
                     <label for="status-filter">Status:</label>
                     <select id="status-filter">
-                        <option value="all">All Status</option>
-                        <option value="completed">Completed</option>
-                        <option value="progress">In Progress</option>
+                        <option value="all">Semua Status</option>
+                        <option value="DELIVERED">Terkirim</option>
+                        <option value="PENDING">Tertunda</option>
                     </select>
                 </div>
             </div>
             <div class="filter-buttons">
                 <button class="btn btn-primary" id="apply-filter">
-                    <i class="fas fa-check"></i> Apply Filter
+                    <i class="fas fa-check"></i> Terapkan Filter
                 </button>
                 <button class="btn btn-secondary" id="reset-filter">
                     <i class="fas fa-sync"></i> Reset Filter
                 </button>
+                <button class="btn btn-success" id="save-data">
+                    <i class="fas fa-save"></i> Simpan Data
+                </button>
+            </div>
+            
+            <div class="update-section">
+                <div class="last-update">
+                    <i class="fas fa-clock"></i>
+                    <span>Terakhir update: <span id="last-update-time">--:--:--</span></span>
+                </div>
+                <div class="auto-update">
+                    <span>Auto Update:</span>
+                    <label class="switch">
+                        <input type="checkbox" id="auto-update-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </div>
         </div>
         
         <div class="dashboard">
             <div class="card">
                 <div class="card-header">
-                    <h2>Project Status</h2>
-                    <i class="fas fa-chart-pie"></i>
+                    <h2>Status Pengiriman</h2>
+                    <i class="fas fa-truck-loading"></i>
                 </div>
                 <div class="card-content">
                     <canvas id="statusChart"></canvas>
@@ -339,40 +714,151 @@
             
             <div class="card">
                 <div class="card-header">
-                    <h2>Progress Trend</h2>
+                    <h2>Volume per Tanggal</h2>
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <div class="card-content">
-                    <canvas id="trendChart"></canvas>
+                    <canvas id="volumeChart"></canvas>
                 </div>
             </div>
             
             <div class="card">
                 <div class="card-header">
-                    <h2>Timeline</h2>
-                    <i class="fas fa-calendar"></i>
+                    <h2>Performa per Plant</h2>
+                    <i class="fas fa-industry"></i>
                 </div>
                 <div class="card-content">
-                    <canvas id="timelineChart"></canvas>
+                    <canvas id="plantChart"></canvas>
                 </div>
             </div>
         </div>
         
+        <div class="summary">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Ringkasan Harian</h2>
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="summary-content">
+                    <div class="plant-summary">
+                        <h3>Denpasar 2</h3>
+                        <p><strong>Volume Order:</strong> <span id="denpasar-order">0</span> m³</p>
+                        <p><strong>Volume Terkirim:</strong> <span id="denpasar-delivered">0</span> m³</p>
+                        <p><strong>Volume Tertunda:</strong> <span id="denpasar-pending">0</span> m³</p>
+                        <p><strong>Proyek Tertunda:</strong> <span id="denpasar-projects">0</span></p>
+                        
+                        <div class="progress-bar">
+                            <div class="progress progress-delivered" id="denpasar-progress" style="width: 0%"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Terkirim: <span id="denpasar-delivered-percent">0</span>%</span>
+                            <span>Tertunda: <span id="denpasar-pending-percent">0</span>%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="plant-summary">
+                        <h3>Gianyar</h3>
+                        <p><strong>Volume Order:</strong> <span id="gianyar-order">0</span> m³</p>
+                        <p><strong>Volume Terkirim:</strong> <span id="gianyar-delivered">0</span> m³</p>
+                        <p><strong>Volume Tertunda:</strong> <span id="gianyar-pending">0</span> m³</p>
+                        <p><strong>Proyek Tertunda:</strong> <span id="gianyar-projects">0</span></p>
+                        
+                        <div class="progress-bar">
+                            <div class="progress progress-delivered" id="gianyar-progress" style="width: 0%"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Terkirim: <span id="gianyar-delivered-percent">0</span>%</span>
+                            <span>Tertunda: <span id="gianyar-pending-percent">0</span>%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>Data Pengiriman</h2>
+                <i class="fas fa-list"></i>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Plant</th>
+                            <th>Tanggal</th>
+                            <th>Status</th>
+                            <th>Site No</th>
+                            <th>Site Name</th>
+                            <th>Qty Order (m³)</th>
+                            <th>Qty Terkirim (m³)</th>
+                            <th>Qty Sisa (m³)</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="delivery-data">
+                        <!-- Data akan diisi secara dinamis -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
         <footer>
-            <p>Dashboard Monitoring Project &copy; 2025</p>
+            <p>Dashboard Monitoring Pengiriman Beton &copy; 2025 - Divisi Logistik</p>
         </footer>
     </div>
 
     <script>
+        // Data untuk simulasi
+        let deliveryData = JSON.parse(localStorage.getItem('deliveryData')) || [];
+        let editIndex = -1;
+        
+        // Chart instances
+        let statusChart, volumeChart, plantChart;
+        let autoUpdateInterval;
+        
         // Initialize the dashboard
         document.addEventListener('DOMContentLoaded', function() {
             updateCurrentDate();
+            updateLastUpdateTime();
             initCharts();
+            renderDeliveryData();
+            updateSummary();
             
             // Set up event listeners
             document.getElementById('apply-filter').addEventListener('click', applyFilters);
             document.getElementById('reset-filter').addEventListener('click', resetFilters);
+            document.getElementById('auto-update-toggle').addEventListener('change', toggleAutoUpdate);
+            document.getElementById('add-data').addEventListener('click', addData);
+            document.getElementById('save-data').addEventListener('click', saveDataToLocalStorage);
+            
+            // Set default date values to today and 7 days ago
+            const today = new Date();
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(today.getDate() - 7);
+            
+            document.getElementById('start-date').value = formatDate(sevenDaysAgo);
+            document.getElementById('end-date').value = formatDate(today);
         });
+        
+        // Format date to YYYY-MM-DD for input[type="date"]
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        // Format date to DD/MM/YYYY for display
+        function formatDisplayDate(dateString) {
+            if (!dateString) return '';
+            
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            
+            return `${day}/${month}/${year}`;
+        }
         
         // Update current date display
         function updateCurrentDate() {
@@ -381,17 +867,28 @@
             document.getElementById('current-date').textContent = now.toLocaleDateString('id-ID', options);
         }
         
+        // Update last update time
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('id-ID');
+            document.getElementById('last-update-time').textContent = timeString;
+        }
+        
         // Initialize charts
         function initCharts() {
-            // Status Chart
+            // Status Pengiriman Chart
             const statusCtx = document.getElementById('statusChart').getContext('2d');
-            const statusChart = new Chart(statusCtx, {
+            statusChart = new Chart(statusCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Completed', 'In Progress', 'Not Started'],
+                    labels: ['Terkirim', 'Tertunda', 'Dibatalkan'],
                     datasets: [{
-                        data: [8, 4, 2],
-                        backgroundColor: ['#2ecc71', '#3498db', '#e74c3c'],
+                        data: [0, 0, 0],
+                        backgroundColor: [
+                            '#2ecc71',
+                            '#f39c12',
+                            '#e74c3c'
+                        ],
                         borderWidth: 1
                     }]
                 },
@@ -406,20 +903,28 @@
                 }
             });
             
-            // Trend Chart
-            const trendCtx = document.getElementById('trendChart').getContext('2d');
-            const trendChart = new Chart(trendCtx, {
-                type: 'line',
+            // Volume per Tanggal Chart
+            const volumeCtx = document.getElementById('volumeChart').getContext('2d');
+            volumeChart = new Chart(volumeCtx, {
+                type: 'bar',
                 data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                    datasets: [{
-                        label: 'Projects Completed',
-                        data: [2, 5, 3, 8, 6, 10],
-                        borderColor: '#3498db',
-                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                        tension: 0.1,
-                        fill: true
-                    }]
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Volume Order',
+                            data: [],
+                            backgroundColor: '#3498db',
+                            borderColor: '#2980b9',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Volume Terkirim',
+                            data: [],
+                            backgroundColor: '#2ecc71',
+                            borderColor: '#27ae60',
+                            borderWidth: 1
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
@@ -432,44 +937,405 @@
                 }
             });
             
-            // Timeline Chart
-            const timelineCtx = document.getElementById('timelineChart').getContext('2d');
-            const timelineChart = new Chart(timelineCtx, {
-                type: 'bar',
+            // Performa per Plant Chart
+            const plantCtx = document.getElementById('plantChart').getContext('2d');
+            plantChart = new Chart(plantCtx, {
+                type: 'pie',
                 data: {
-                    labels: ['Project A', 'Project B', 'Project C', 'Project D', 'Project E'],
+                    labels: ['Denpasar 2', 'Gianyar'],
                     datasets: [{
-                        label: 'Progress (%)',
-                        data: [75, 90, 60, 100, 45],
-                        backgroundColor: '#2ecc71',
+                        data: [0, 0],
+                        backgroundColor: [
+                            '#3498db',
+                            '#9b59b6'
+                        ],
                         borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
                         }
                     }
                 }
             });
         }
         
-        // Apply filters
+        // Render delivery data to table
+        function renderDeliveryData(data = deliveryData) {
+            const tableBody = document.getElementById('delivery-data');
+            tableBody.innerHTML = '';
+            
+            if (data.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="9" style="text-align: center;">Tidak ada data</td>`;
+                tableBody.appendChild(row);
+                return;
+            }
+            
+            data.forEach((item, index) => {
+                const row = document.createElement('tr');
+                
+                // Determine status class
+                let statusClass = '';
+                if (item.status === 'DELIVERED') statusClass = 'status-delivered';
+                else if (item.status === 'PENDING') statusClass = 'status-pending';
+                else if (item.status === 'CANCEL') statusClass = 'status-cancel';
+                
+                // Calculate remaining quantity
+                const qtyRemain = item.qtyOrder - item.qtyDelivered;
+                
+                row.innerHTML = `
+                    <td>${item.plant}</td>
+                    <td>${formatDisplayDate(item.date)}</td>
+                    <td class="${statusClass}">${item.status === 'DELIVERED' ? 'TERKIRIM' : 'TERTUNDA'}</td>
+                    <td>${item.siteNo}</td>
+                    <td>${item.siteName}</td>
+                    <td>${item.qtyOrder}</td>
+                    <td>${item.qtyDelivered}</td>
+                    <td>${qtyRemain}</td>
+                    <td class="action-buttons">
+                        <button class="action-btn btn-edit" onclick="editData(${index})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn btn-delete" onclick="deleteData(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Add new data
+        function addData() {
+            const plant = document.getElementById('input-plant').value;
+            const date = document.getElementById('input-date').value;
+            const status = document.getElementById('input-status').value;
+            const siteNo = document.getElementById('input-siteNo').value;
+            const siteName = document.getElementById('input-siteName').value;
+            const qtyOrder = parseInt(document.getElementById('input-qtyOrder').value) || 0;
+            const qtyDelivered = parseInt(document.getElementById('input-qtyDelivered').value) || 0;
+            
+            // Validate input
+            if (!siteNo || !siteName || qtyOrder <= 0) {
+                alert('Harap isi semua field dengan benar!');
+                return;
+            }
+            
+            if (editIndex === -1) {
+                // Add new data
+                deliveryData.push({
+                    plant,
+                    date,
+                    status,
+                    siteNo,
+                    siteName,
+                    qtyOrder,
+                    qtyDelivered
+                });
+                
+                showNotification('Data berhasil ditambahkan!');
+            } else {
+                // Update existing data
+                deliveryData[editIndex] = {
+                    plant,
+                    date,
+                    status,
+                    siteNo,
+                    siteName,
+                    qtyOrder,
+                    qtyDelivered
+                };
+                
+                editIndex = -1;
+                document.getElementById('add-data').innerHTML = '<i class="fas fa-plus"></i> Tambah';
+                showNotification('Data berhasil diupdate!');
+            }
+            
+            // Clear input fields
+            document.getElementById('input-siteNo').value = '';
+            document.getElementById('input-siteName').value = '';
+            document.getElementById('input-qtyOrder').value = '';
+            document.getElementById('input-qtyDelivered').value = '';
+            
+            // Update display
+            updateLastUpdateTime();
+            renderDeliveryData();
+            updateSummary();
+            saveDataToLocalStorage();
+        }
+        
+        // Edit data
+        function editData(index) {
+            const item = deliveryData[index];
+            
+            document.getElementById('input-plant').value = item.plant;
+            document.getElementById('input-date').value = item.date;
+            document.getElementById('input-status').value = item.status;
+            document.getElementById('input-siteNo').value = item.siteNo;
+            document.getElementById('input-siteName').value = item.siteName;
+            document.getElementById('input-qtyOrder').value = item.qtyOrder;
+            document.getElementById('input-qtyDelivered').value = item.qtyDelivered;
+            
+            editIndex = index;
+            document.getElementById('add-data').innerHTML = '<i class="fas fa-save"></i> Update';
+            
+            // Scroll to input section
+            document.querySelector('.input-section').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Delete data
+        function deleteData(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                deliveryData.splice(index, 1);
+                
+                updateLastUpdateTime();
+                renderDeliveryData();
+                updateSummary();
+                saveDataToLocalStorage();
+                
+                showNotification('Data berhasil dihapus!');
+            }
+        }
+        
+        // Save data to localStorage
+        function saveDataToLocalStorage() {
+            localStorage.setItem('deliveryData', JSON.stringify(deliveryData));
+            showNotification('Data berhasil disimpan!');
+        }
+        
+        // Update summary information
+        function updateSummary() {
+            // Calculate totals
+            let totalVolume = 0;
+            let deliveredVolume = 0;
+            let pendingVolume = 0;
+            let totalProjects = deliveryData.length;
+            
+            deliveryData.forEach(item => {
+                totalVolume += item.qtyOrder;
+                deliveredVolume += item.qtyDelivered;
+                pendingVolume += (item.qtyOrder - item.qtyDelivered);
+            });
+            
+            // Update header stats
+            document.getElementById('total-volume').textContent = `${totalVolume} m³`;
+            document.getElementById('delivered-volume').textContent = `${deliveredVolume} m³`;
+            document.getElementById('pending-volume').textContent = `${pendingVolume} m³`;
+            document.getElementById('total-projects').textContent = totalProjects;
+            
+            // Calculate plant-specific stats
+            const denpasarData = deliveryData.filter(item => item.plant === 'DENPASAR 2');
+            const gianyarData = deliveryData.filter(item => item.plant === 'GIANYAR');
+            
+            let denpasarOrder = 0;
+            let denpasarDelivered = 0;
+            let denpasarPending = 0;
+            
+            denpasarData.forEach(item => {
+                denpasarOrder += item.qtyOrder;
+                denpasarDelivered += item.qtyDelivered;
+                denpasarPending += (item.qtyOrder - item.qtyDelivered);
+            });
+            
+            let gianyarOrder = 0;
+            let gianyarDelivered = 0;
+            let gianyarPending = 0;
+            
+            gianyarData.forEach(item => {
+                gianyarOrder += item.qtyOrder;
+                gianyarDelivered += item.qtyDelivered;
+                gianyarPending += (item.qtyOrder - item.qtyDelivered);
+            });
+            
+            // Update plant summaries
+            document.getElementById('denpasar-order').textContent = denpasarOrder;
+            document.getElementById('denpasar-delivered').textContent = denpasarDelivered;
+            document.getElementById('denpasar-pending').textContent = denpasarPending;
+            document.getElementById('denpasar-projects').textContent = denpasarData.length;
+            
+            document.getElementById('gianyar-order').textContent = gianyarOrder;
+            document.getElementById('gianyar-delivered').textContent = gianyarDelivered;
+            document.getElementById('gianyar-pending').textContent = gianyarPending;
+            document.getElementById('gianyar-projects').textContent = gianyarData.length;
+            
+            // Calculate percentages
+            const denpasarDeliveredPercent = denpasarOrder > 0 ? Math.round((denpasarDelivered / denpasarOrder) * 100) : 0;
+            const denpasarPendingPercent = denpasarOrder > 0 ? 100 - denpasarDeliveredPercent : 0;
+            
+            const gianyarDeliveredPercent = gianyarOrder > 0 ? Math.round((gianyarDelivered / gianyarOrder) * 100) : 0;
+            const gianyarPendingPercent = gianyarOrder > 0 ? 100 - gianyarDeliveredPercent : 0;
+            
+            // Update percentages and progress bars
+            document.getElementById('denpasar-delivered-percent').textContent = denpasarDeliveredPercent;
+            document.getElementById('denpasar-pending-percent').textContent = denpasarPendingPercent;
+            document.getElementById('denpasar-progress').style.width = `${denpasarDeliveredPercent}%`;
+            
+            document.getElementById('gianyar-delivered-percent').textContent = gianyarDeliveredPercent;
+            document.getElementById('gianyar-pending-percent').textContent = gianyarPendingPercent;
+            document.getElementById('gianyar-progress').style.width = `${gianyarDeliveredPercent}%`;
+            
+            // Update charts
+            updateCharts(totalVolume, deliveredVolume, pendingVolume, denpasarOrder, gianyarOrder);
+        }
+        
+        // Update charts with new data
+        function updateCharts(totalVolume, deliveredVolume, pendingVolume, denpasarOrder, gianyarOrder) {
+            // Update status chart
+            statusChart.data.datasets[0].data = [deliveredVolume, pendingVolume, 0];
+            statusChart.update();
+            
+            // Update plant chart
+            plantChart.data.datasets[0].data = [denpasarOrder, gianyarOrder];
+            plantChart.update();
+            
+            // Update volume chart with dates
+            const dateData = {};
+            deliveryData.forEach(item => {
+                const date = formatDisplayDate(item.date);
+                if (!dateData[date]) {
+                    dateData[date] = { order: 0, delivered: 0 };
+                }
+                dateData[date].order += item.qtyOrder;
+                dateData[date].delivered += item.qtyDelivered;
+            });
+            
+            const dates = Object.keys(dateData).sort();
+            const orderData = dates.map(date => dateData[date].order);
+            const deliveredData = dates.map(date => dateData[date].delivered);
+            
+            volumeChart.data.labels = dates;
+            volumeChart.data.datasets[0].data = orderData;
+            volumeChart.data.datasets[1].data = deliveredData;
+            volumeChart.update();
+        }
+        
+        // Apply filters to the data
         function applyFilters() {
-            alert('Filters applied!');
-            // Add your filter logic here
+            const startDate = new Date(document.getElementById('start-date').value);
+            const endDate = new Date(document.getElementById('end-date').value);
+            const plantFilter = document.getElementById('plant-filter').value;
+            const statusFilter = document.getElementById('status-filter').value;
+            
+            // Filter data based on criteria
+            let filteredData = deliveryData.filter(item => {
+                const itemDate = new Date(item.date);
+                
+                // Date filter
+                if (itemDate < startDate || itemDate > endDate) return false;
+                
+                // Plant filter
+                if (plantFilter !== 'all' && item.plant !== plantFilter) return false;
+                
+                // Status filter
+                if (statusFilter !== 'all' && item.status !== statusFilter) return false;
+                
+                return true;
+            });
+            
+            // Render filtered data
+            renderDeliveryData(filteredData);
+            
+            // Show notification
+            showNotification(`Filter diterapkan. Menampilkan ${filteredData.length} data.`);
         }
         
         // Reset filters
         function resetFilters() {
             document.getElementById('start-date').value = '2025-09-01';
             document.getElementById('end-date').value = '2025-09-05';
+            document.getElementById('plant-filter').value = 'all';
             document.getElementById('status-filter').value = 'all';
-            alert('Filters reset!');
+            
+            // Render all data
+            renderDeliveryData();
+            
+            // Show notification
+            showNotification('Filter direset. Menampilkan semua data.');
+        }
+        
+        // Toggle auto-update
+        function toggleAutoUpdate() {
+            const autoUpdateToggle = document.getElementById('auto-update-toggle');
+            
+            if (autoUpdateToggle.checked) {
+                // Start auto-update
+                autoUpdateInterval = setInterval(updateData, 10000); // Update every 10 seconds
+                showNotification('Auto-update diaktifkan. Data akan diperbarui setiap 10 detik.');
+            } else {
+                // Stop auto-update
+                clearInterval(autoUpdateInterval);
+                showNotification('Auto-update dimatikan.');
+            }
+        }
+        
+        // Simulate data update
+        function updateData() {
+            // Simulate new data arriving
+            const newData = [...deliveryData];
+            
+            // Randomly update some values
+            newData.forEach(item => {
+                if (item.status === 'PENDING' && Math.random() > 0.7) {
+                    // Simulate some deliveries
+                    const delivered = Math.min(item.qtyOrder - item.qtyDelivered, Math.floor(Math.random() * 10) + 5);
+                    item.qtyDelivered += delivered;
+                    
+                    if (item.qtyDelivered >= item.qtyOrder) {
+                        item.status = 'DELIVERED';
+                        item.qtyDelivered = item.qtyOrder;
+                    }
+                }
+            });
+            
+            deliveryData = newData;
+            
+            // Update the UI
+            updateLastUpdateTime();
+            renderDeliveryData();
+            updateSummary();
+            saveDataToLocalStorage();
+            
+            // Show notification
+            showNotification('Data diperbarui secara otomatis.');
+        }
+        
+        // Show notification
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.backgroundColor = '#2c3e50';
+            notification.style.color = 'white';
+            notification.style.padding = '10px 15px';
+            notification.style.borderRadius = '5px';
+            notification.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            notification.style.zIndex = '1000';
+            notification.style.opacity = '0';
+            notification.style.transition = 'opacity 0.3s ease';
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.opacity = '1';
+            }, 10);
+            
+            // Animate out and remove after 3 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
         }
     </script>
 </body>
