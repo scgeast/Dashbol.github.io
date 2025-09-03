@@ -18,6 +18,7 @@
             --light: #ecf0f1;
             --dark: #2c3e50;
             --gray: #7f8c8d;
+            --sidebar-width: 300px;
         }
         
         * {
@@ -130,7 +131,7 @@
         
         .input-row {
             display: grid;
-            grid-template-columns: 0.8fr 0.8fr 0.8fr 1fr 1.2fr 0.6fr 0.6fr 0.6fr 0.6fr;
+            grid-template-columns: 0.8fr 0.8fr 0.8fr 1fr 1.2fr 0.5fr 0.5fr 0.5fr 0.5fr;
             gap: 8px;
             margin-bottom: 15px;
             align-items: end;
@@ -154,6 +155,15 @@
             border-radius: 5px;
             font-size: 12px;
             height: 38px;
+        }
+        
+        /* Force smaller width for quantity inputs */
+        #input-qtyOrder, 
+        #input-qtyDelivered, 
+        #input-qtyRemain, 
+        #input-qtyCancel {
+            width: 80px;
+            max-width: 80px;
         }
         
         /* Dashboard Styles */
@@ -208,7 +218,6 @@
             display: flex;
             align-items: center;
             margin-bottom: 15px;
-            cursor: pointer;
         }
         
         .filter-title h2 {
@@ -424,6 +433,21 @@
             background-color: #f9f9f9;
         }
         
+        /* Untuk tabel - kolom quantity lebih sempit */
+        .data-table th:nth-child(6),
+        .data-table th:nth-child(7), 
+        .data-table th:nth-child(8),
+        .data-table th:nth-child(9),
+        .data-table td:nth-child(6),
+        .data-table td:nth-child(7),
+        .data-table td:nth-child(8),
+        .data-table td:nth-child(9) {
+            width: 80px;
+            min-width: 80px;
+            max-width: 100px;
+            text-align: center;
+        }
+        
         .status-delivered {
             color: var(--success);
             font-weight: 500;
@@ -477,15 +501,58 @@
             font-size: 14px;
         }
         
-        .add-row-container {
+        /* Sidebar Filter */
+        .sidebar-toggle {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
             display: flex;
-            justify-content: flex-end;
-            margin-top: 10px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
         
-        .collapsed .filter-controls,
-        .collapsed .filter-buttons {
-            display: none;
+        .filter-sidebar {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: var(--sidebar-width);
+            height: 100%;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            z-index: 999;
+            transition: right 0.3s ease;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .filter-sidebar.open {
+            right: 0;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .close-sidebar {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--dark);
         }
         
         @media (max-width: 1200px) {
@@ -541,6 +608,11 @@
             
             .kpi-grid {
                 grid-template-columns: 1fr 1fr;
+            }
+            
+            .filter-sidebar {
+                width: 85%;
+                right: -85%;
             }
         }
         
@@ -749,16 +821,20 @@
         
         <!-- Dashboard Tab -->
         <div class="tab-content" id="dashboard-tab">
-            <div class="filter-section" id="dashboard-filter">
-                <div class="filter-title" onclick="toggleFilter()">
-                    <i class="fas fa-filter"></i>
-                    <h2>Filter Data</h2>
-                    <i class="fas fa-chevron-down" id="filter-chevron" style="margin-left: auto;"></i>
+            <!-- Sidebar Toggle Button -->
+            <button class="sidebar-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-filter"></i>
+            </button>
+            
+            <!-- Filter Sidebar -->
+            <div class="filter-sidebar" id="filter-sidebar">
+                <div class="sidebar-header">
+                    <h2>Filter Dashboard</h2>
+                    <button class="close-sidebar" onclick="toggleSidebar()">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-                <div class="last-update" style="position: absolute; right: 30px; top: 30px;">
-                    <i class="fas fa-clock"></i>
-                    <span>Last update: <span id="last-update-time">--:--:--</span></span>
-                </div>
+                
                 <div class="filter-controls">
                     <div class="filter-group">
                         <label for="dashboard-start-date">Dari Tanggal:</label>
@@ -793,6 +869,11 @@
                     <button class="btn btn-secondary" id="dashboard-reset-filter">
                         <i class="fas fa-sync"></i> Reset Filter
                     </button>
+                </div>
+                
+                <div class="last-update" style="margin-top: 20px;">
+                    <i class="fas fa-clock"></i>
+                    <span>Last update: <span id="last-update-time">--:--:--</span></span>
                 </div>
             </div>
             
@@ -992,6 +1073,11 @@
             document.getElementById('dashboard-end-date').value = formatDate(today);
         });
         
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('filter-sidebar').classList.toggle('open');
+        }
+        
         // Format date to YYYY-MM-DD for input[type="date"]
         function formatDate(date) {
             const year = date.getFullYear();
@@ -1024,20 +1110,6 @@
             const now = new Date();
             const timeString = now.toLocaleTimeString('id-ID');
             document.getElementById('last-update-time').textContent = timeString;
-        }
-        
-        // Toggle filter visibility
-        function toggleFilter() {
-            const filterSection = document.getElementById('dashboard-filter');
-            const chevron = document.getElementById('filter-chevron');
-            
-            filterSection.classList.toggle('collapsed');
-            
-            if (filterSection.classList.contains('collapsed')) {
-                chevron.className = 'fas fa-chevron-up';
-            } else {
-                chevron.className = 'fas fa-chevron-down';
-            }
         }
         
         // Calculate Qty Remain
@@ -1093,17 +1165,6 @@
                     plugins: {
                         legend: {
                             position: 'bottom'
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = Math.round((value / total) * 100);
-                                    return `${label}: ${value} m³ (${percentage}%)`;
-                                }
-                            }
                         }
                     }
                 }
@@ -1144,20 +1205,7 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Volume (m³)'
-                            }
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.dataset.label}: ${context.raw} m³`;
-                                }
-                            }
+                            beginAtZero: true
                         }
                     }
                 }
@@ -1183,26 +1231,7 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Volume (m³)'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Tanggal'
-                            }
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `Qty Order: ${context.raw} m³`;
-                                }
-                            }
+                            beginAtZero: true
                         }
                     }
                 }
@@ -1492,11 +1521,6 @@
             let gianyarCancel = 0;
             let gianyarProjectsRemain = new Set();
             
-            // Calculate status-based quantities for the chart
-            let pendingQty = 0;
-            let deliveredQty = 0;
-            let canceledQty = 0;
-            
             filteredData.forEach(item => {
                 // Calculate remaining quantity
                 const qtyRemain = item.status === 'CANCEL' ? 0 : item.qtyOrder - item.qtyDelivered - (item.qtyCancel || 0);
@@ -1535,15 +1559,6 @@
                     if (qtyRemain > 0) {
                         gianyarProjectsRemain.add(item.siteNo);
                     }
-                }
-                
-                // Calculate status-based quantities
-                if (item.status === 'PENDING') {
-                    pendingQty += item.qtyDelivered;
-                } else if (item.status === 'DELIVERED') {
-                    deliveredQty += item.qtyDelivered;
-                } else if (item.status === 'CANCEL') {
-                    canceledQty += item.qtyDelivered;
                 }
             });
             
@@ -1592,7 +1607,7 @@
             document.getElementById('gianyar-progress-cancel').style.width = `${gianyarCancelPercent}%`;
             
             // Update charts
-            updateCharts(filteredData, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain, pendingQty, deliveredQty, canceledQty);
+            updateCharts(filteredData, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain);
             
             // Render project remain details
             renderProjectRemainDetails(filteredData.filter(item => {
@@ -1602,9 +1617,20 @@
         }
         
         // Update charts with new data
-        function updateCharts(data, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain, pendingQty, deliveredQty, canceledQty) {
-            // Update status chart with quantities
-            statusChart.data.datasets[0].data = [pendingQty, deliveredQty, canceledQty];
+        function updateCharts(data, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain) {
+            // Count status
+            let pendingCount = 0;
+            let deliveredCount = 0;
+            let canceledCount = 0;
+            
+            data.forEach(item => {
+                if (item.status === 'PENDING') pendingCount++;
+                else if (item.status === 'DELIVERED') deliveredCount++;
+                else if (item.status === 'CANCEL') canceledCount++;
+            });
+            
+            // Update status chart
+            statusChart.data.datasets[0].data = [pendingCount, deliveredCount, canceledCount];
             statusChart.update();
             
             // Update plant chart
