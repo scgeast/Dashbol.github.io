@@ -30,4 +30,34 @@ body {
     padding: 20px;
 }
 
+/* Di dalam bagian CSS, ubah .input-row */
+.input-row {
+    display: grid;
+    grid-template-columns: 0.8fr 0.8fr 0.8fr 1fr 1.2fr 0.5fr 0.5fr 0.5fr 0.5fr;
+    gap: 8px;
+    margin-bottom: 15px;
+    align-items: end;
+}
+
+/* Tambahkan style untuk input number yang lebih kecil */
+.input-group input[type="number"] {
+    width: 100%;
+    min-width: 60px;
+}
+
+/* Untuk tabel di tab List Order */
+.data-table th:nth-child(6),
+.data-table th:nth-child(7), 
+.data-table th:nth-child(8),
+.data-table th:nth-child(9),
+.data-table td:nth-child(6),
+.data-table td:nth-child(7),
+.data-table td:nth-child(8),
+.data-table td:nth-child(9) {
+    width: 80px;
+    min-width: 80px;
+    max-width: 100px;
+    text-align: center;
+}
+
 /* Tambahkan style lainnya di sini */
