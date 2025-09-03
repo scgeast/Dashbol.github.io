@@ -334,13 +334,13 @@
         }
         
         .kpi-card {
-            background: linear-gradient(135deg, var(--primary) 极速快3 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             border-radius: 10px;
             padding: 15px;
             text-align: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             color: white;
-           极速快3 min-height: 100px;
+            min-height: 100px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -348,3 +348,1388 @@
         
         .kpi-card h3 {
             font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .kpi-card .value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .summary {
+            grid-column: 1 / -1;
+        }
+        
+        .summary-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .plant-summary {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .plant-summary:hover {
+            transform: translateY(-3px);
+        }
+        
+        .plant-summary h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            border-radius: 5px;
+        }
+        
+        .progress-delivered {
+            background: var(--success);
+        }
+        
+        .progress-remaining {
+            background: var(--warning);
+        }
+        
+        .progress-cancel {
+            background: var(--accent);
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .data-table th {
+            background-color: var(--light);
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        /* Untuk tabel - kolom quantity lebih sempit */
+        .data-table th:nth-child(6),
+        .data-table th:nth-child(7), 
+        .data-table th:nth-child(8),
+        .data-table th:nth-child(9),
+        .data-table td:nth-child(6),
+        .data-table td:nth-child(7),
+        .data-table td:nth-child(8),
+        .data-table td:nth-child(9) {
+            width: 80px;
+            min-width: 80px;
+            max-width: 100px;
+            text-align: center;
+        }
+        
+        .status-delivered {
+            color: var(--success);
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            color: var(--warning);
+            font-weight: 500;
+        }
+        
+        .status-cancel {
+            color: var(--accent);
+            font-weight: 500;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .action-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-edit {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .btn-delete {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-save {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        /* Sidebar Filter */
+        .sidebar-toggle {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .filter-sidebar {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: var(--sidebar-width);
+            height: 100%;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            z-index: 999;
+            transition: right 0.3s ease;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .filter-sidebar.open {
+            right: 0;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .close-sidebar {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--dark);
+        }
+        
+        @media (max-width: 1200px) {
+            .input-row {
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .date-filter {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .card-content {
+                height: 200px;
+            }
+            
+            .data-table {
+                font-size: 14px;
+            }
+            
+            .data-table th, .data-table td {
+                padding: 8px 10px;
+            }
+            
+            .filter-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .update-section {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .input-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .filter-sidebar {
+                width: 85%;
+                right: -85%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .logo h1 {
+                font-size: 20px;
+            }
+            
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <div class="logo">
+                    <i class="fas fa-hard-hat fa-2x"></i>
+                    <h1>Monitoring Pengiriman Beton</h1>
+                </div>
+                <div class="date-filter">
+                    <i class="far fa-calendar-alt"></i>
+                    <span id="current-date">02 September 2025</span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <div class="tab active" data-tab="create">
+                <i class="fas fa-plus-circle"></i>
+                <span>Create List Order</span>
+            </div>
+            <div class="tab" data-tab="list">
+                <i class="fas fa-list"></i>
+                <span>List Order</span>
+            </div>
+            <div class="tab" data-tab="dashboard">
+                <i class="fas fa-chart-bar"></i>
+                <span>Dashboard</span>
+            </div>
+        </div>
+        
+        <!-- Create List Order Tab -->
+        <div class="tab-content active" id="create-tab">
+            <div class="input-section">
+                <div class="filter-title">
+                    <i class="fas fa-plus-circle"></i>
+                    <h2>Create List Order</h2>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="input-date">Tanggal</label>
+                        <input type="date" id="input-date" value="2025-09-02">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="input-plant">Plant</label>
+                        <select id="input-plant">
+                            <option value="DENPASAR 2">Denpasar 2</option>
+                            <option value="GIANYAR">Gianyar</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="input-status">Status</label>
+                        <select id="input-status">
+                            <option value="PENDING">Pending</option>
+                            <option value="DELIVERED">Delivery</option>
+                            <option value="CANCEL">Cancel</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="input-siteNo">Site No</label>
+                        <input type="text" id="input-siteNo" placeholder="Nomor Site">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="input-siteName">Site Name</label>
+                        <input type="text" id="input-siteName" placeholder="Nama Site">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="input-qtyOrder">Qty Order</label>
+                        <input type="number" id="input-qtyOrder" placeholder="m³" min="0" oninput="calculateRemain()">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="input-qtyDelivered">Qty Delivery</label>
+                        <input type="number" id="input-qtyDelivered" placeholder="m³" min="0" oninput="calculateRemain()">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="input-qtyRemain">Qty Remain</label>
+                        <input type="number" id="input-qtyRemain" placeholder="m³" min="0" readonly>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="input-qtyCancel">Qty Cancel</label>
+                        <input type="number" id="input-qtyCancel" placeholder="m³" min="0" oninput="calculateRemainFromCancel()">
+                    </div>
+                </div>
+                
+                <div class="filter-buttons">
+                    <button class="btn btn-success" id="add-data">
+                        <i class="fas fa-plus"></i> Add Row
+                    </button>
+                    <button class="btn btn-primary" id="save-data">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- List Order Tab -->
+        <div class="tab-content" id="list-tab">
+            <div class="filter-section">
+                <div class="filter-title">
+                    <i class="fas fa-filter"></i>
+                    <h2>Filter Data</h2>
+                </div>
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="list-start-date">Dari Tanggal:</label>
+                        <input type="date" id="list-start-date" value="2025-09-01">
+                    </div>
+                    <div class="filter-group">
+                        <label for="list-end-date">Sampai Tanggal:</label>
+                        <input type="date" id="list-end-date" value="2025-09-05">
+                    </div>
+                    <div class="filter-group">
+                        <label for="list-plant-filter">Plant:</label>
+                        <select id="list-plant-filter">
+                            <option value="all">Semua Plant</option>
+                            <option value="DENPASAR 2">Denpasar 2</option>
+                            <option value="GIANYAR">Gianyar</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="list-status-filter">Status:</label>
+                        <select id="list-status-filter">
+                            <option value="all">Semua Status</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="DELIVERED">Delivery</option>
+                            <option value="CANCEL">Cancel</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-buttons">
+                    <button class="btn btn-primary" id="list-apply-filter">
+                        <i class="fas fa-check"></i> Terapkan Filter
+                    </button>
+                    <button class="btn btn-secondary" id="list-reset-filter">
+                        <i class="fas fa-sync"></i> Reset Filter
+                    </button>
+                    <button class="btn btn-success" id="list-update-data">
+                        <i class="fas fa-save"></i> Update
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>List Order</h2>
+                    <i class="fas fa-list"></i>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Plant</th>
+                                <th>Status</th>
+                                <th>Site No</th>
+                                <th>Site Name</th>
+                                <th>Qty Order (m³)</th>
+                                <th>Qty Delivery (m³)</th>
+                                <th>Qty Remain (m³)</th>
+                                <th>Qty Cancel (m³)</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="list-order-data">
+                            <!-- Data akan diisi secara dinamis -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dashboard Tab -->
+        <div class="tab-content" id="dashboard-tab">
+            <!-- Sidebar Toggle Button -->
+            <button class="sidebar-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-filter"></i>
+            </button>
+            
+            <!-- Filter Sidebar -->
+            <div class="filter-sidebar" id="filter-sidebar">
+                <div class="sidebar-header">
+                    <h2>Filter Dashboard</h2>
+                    <button class="close-sidebar" onclick="toggleSidebar()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="dashboard-start-date">Dari Tanggal:</label>
+                        <input type="date" id="dashboard-start-date" value="2025-09-01">
+                    </div>
+                    <div class="filter-group">
+                        <label for="dashboard-end-date">Sampai Tanggal:</label>
+                        <input type="date" id="dashboard-end-date" value="2025-09-05">
+                    </div>
+                    <div class="filter-group">
+                        <label for="dashboard-plant-filter">Plant:</label>
+                        <select id="dashboard-plant-filter">
+                            <option value="all">Semua Plant</option>
+                            <option value="DENPASAR 2">Denpasar 2</option>
+                            <option value="GIANYAR">Gianyar</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="dashboard-status-filter">Status:</label>
+                        <select id="dashboard-status-filter">
+                            <option value="all">Semua Status</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="DELIVERED">Delivery</option>
+                            <option value="CANCEL">Cancel</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-buttons">
+                    <button class="btn btn-primary" id="dashboard-apply-filter">
+                        <i class="fas fa-check"></i> Terapkan Filter
+                    </button>
+                    <button class="btn btn-secondary" id="dashboard-reset-filter">
+                        <i class="fas fa-sync"></i> Reset Filter
+                    </button>
+                </div>
+                
+                <div class="last-update" style="margin-top: 20px;">
+                    <i class="fas fa-clock"></i>
+                    <span>Last update: <span id="last-update-time">--:--:--</span></span>
+                </div>
+            </div>
+            
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <h3>Total Qty Order</h3>
+                    <div class="value" id="total-order">0 m³</div>
+                </div>
+                <div class="kpi-card">
+                    <h3>Total Plant</h3>
+                    <div class="value" id="total-plant">0</div>
+                </div>
+                <div class="kpi-card">
+                    <h3>Total Qty Delivery</h3>
+                    <div class="value" id="total-delivery">0 m³</div>
+                </div>
+                <div class="kpi-card">
+                    <h3>Total Qty Remain</h3>
+                    <div class="value" id="total-remain">0 m³</div>
+                </div>
+                <div class="kpi-card">
+                    <h3>Total Qty Cancel</h3>
+                    <div class="value" id="total-cancel">0 m³</div>
+                </div>
+                <div class="kpi-card">
+                    <h3>Total Project</h3>
+                    <div class="value" id="total-project">0</div>
+                </div>
+                <div class="kpi-card">
+                    <h3>Total Project Remain</h3>
+                    <div class="value" id="total-project-remain">0</div>
+                </div>
+            </div>
+            
+            <div class="dashboard">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Qty Delivery by Status</h2>
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="card-content">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Plant Performance</h2>
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <div class="card-content">
+                        <canvas id="plantChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Qty Order Per Day</h2>
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="card-content">
+                        <canvas id="dailyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="summary">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Daily Delivery Summary</h2>
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="summary-content">
+                        <div class="plant-summary">
+                            <h3>Daily Delivery Denpasar</h3>
+                            <p><strong>Volume order:</strong> <span id="denpasar-order">0</span> M3</p>
+                            <p><strong>Volume Delivered:</strong> <span id="denpasar-delivered">0</span> M3</p>
+                            <p><strong>Volume Remain:</strong> <span id="denpasar-remain">0</span> M3</p>
+                            <p><strong>Project Remain:</strong> <span id="denpasar-project-remain">0</span></p>
+                            
+                            <div class="progress-bar">
+                                <div class="progress progress-delivered" id="denpasar-progress-delivered" style="width: 0%"></div>
+                                <div class="progress progress-remaining" id="denpasar-progress-remain" style="width: 0%"></div>
+                                <div class="progress progress-cancel" id="denpasar-progress-cancel" style="width: 0%"></div>
+                            </div>
+                            <p><strong>Prosentase Pencapaian:</strong> <span id="denpasar-percentage">0</span>%</p>
+                        </div>
+                        
+                        <div class="plant-summary">
+                            <h3>Daily Delivery Gianyar</h3>
+                            <p><strong>Volume order:</strong> <span id="gianyar-order">0</span> M3</p>
+                            <p><strong>Volume Delivered:</strong> <span id="gianyar-delivered">0</span> M3</p>
+                            <p><strong>Volume Remain:</strong> <span id="gianyar-remain">0</span> M3</p>
+                            <p><strong>Project Remain:</strong> <span id="gianyar-project-remain">0</span></p>
+                            
+                            <div class="progress-bar">
+                                <div class="progress progress-delivered" id="gianyar-progress-delivered" style="width: 0%"></div>
+                                <div class="progress progress-remaining" id="gianyar-progress-remain" style="width: 0%"></div>
+                                <div class="progress progress-cancel" id="gianyar-progress-cancel" style="width: 0%"></div>
+                            </div>
+                            <p><strong>Prosentase Pencapaian:</strong> <span id="gianyar-percentage">0</span>%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Project Remain Details</h2>
+                    <i class="fas fa-list"></i>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Plant</th>
+                                <th>Status</th>
+                                <th>Site No</th>
+                                <th>Site Name</th>
+                                <th>Qty Order (m³)</th>
+                                <th>Qty Delivery (m³)</th>
+                                <th>Qty Remain (m³)</th>
+                                <th>Qty Cancel (m³)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-project-data">
+                            <!-- Data akan diisi secara dinamis -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Dashboard Monitoring Pengiriman Beton &copy; 2025 - Divisi Logistik</p>
+        </footer>
+    </div>
+
+    <script>
+        // Data untuk simulasi
+        let orderData = JSON.parse(localStorage.getItem('orderData')) || [];
+        let editIndex = -1;
+        
+        // Chart instances
+        let statusChart, plantChart, dailyChart;
+        
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentDate();
+            updateLastUpdateTime();
+            initCharts();
+            renderListData();
+            updateDashboard();
+            
+            // Set up event listeners
+            document.getElementById('add-data').addEventListener('click', addData);
+            document.getElementById('save-data').addEventListener('click', saveDataToLocalStorage);
+            
+            // List tab filters
+            document.getElementById('list-apply-filter').addEventListener('click', applyListFilter);
+            document.getElementById('list-reset-filter').addEventListener('click', resetListFilter);
+            document.getElementById('list-update-data').addEventListener('click', updateListData);
+            
+            // Dashboard tab filters
+            document.getElementById('dashboard-apply-filter').addEventListener('click', applyDashboardFilter);
+            document.getElementById('dashboard-reset-filter').addEventListener('click', resetDashboardFilter);
+            
+            // Tab functionality
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+                    
+                    // If switching to dashboard, update it
+                    if (tab.dataset.tab === 'dashboard') {
+                        updateDashboard();
+                    } else if (tab.dataset.tab === 'list') {
+                        renderListData();
+                    }
+                });
+            });
+            
+            // Set default date values to today and 7 days ago
+            const today = new Date();
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(today.getDate() - 7);
+            
+            document.getElementById('list-start-date').value = formatDate(sevenDaysAgo);
+            document.getElementById('list-end-date').value = formatDate(today);
+            document.getElementById('dashboard-start-date').value = formatDate(sevenDaysAgo);
+            document.getElementById('dashboard-end-date').value = formatDate(today);
+        });
+        
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('filter-sidebar').classList.toggle('open');
+        }
+        
+        // Format date to YYYY-MM-DD for input[type="date"]
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        // Format date to DD/MM/YYYY for display
+        function formatDisplayDate(dateString) {
+            if (!dateString) return '';
+            
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            
+            return `${day}/${month}/${year}`;
+        }
+        
+        // Update current date display
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { day: '2-digit', month: 'long', year: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('id-ID', options);
+        }
+        
+        // Update last update time
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('id-ID');
+            document.getElementById('last-update-time').textContent = timeString;
+        }
+        
+        // Calculate Qty Remain
+        function calculateRemain() {
+            const qtyOrder = parseInt(document.getElementById('input-qtyOrder').value) || 0;
+            const qtyDelivered = parseInt(document.getElementById('input-qtyDelivered').value) || 0;
+            const qtyCancel = parseInt(document.getElementById('input-qtyCancel').value) || 0;
+            
+            // Calculate remain considering both delivery and cancel
+            const qtyRemain = qtyOrder - qtyDelivered - qtyCancel;
+            
+            document.getElementById('input-qtyRemain').value = qtyRemain > 0 ? qtyRemain : 0;
+        }
+        
+        // Calculate Qty Remain when Cancel changes
+        function calculateRemainFromCancel() {
+            const qtyOrder = parseInt(document.getElementById('input-qtyOrder').value) || 0;
+            const qtyDelivered = parseInt(document.getElementById('input-qtyDelivered').value) || 0;
+            const qtyCancel = parseInt(document.getElementById('input-qtyCancel').value) || 0;
+            
+            // Validate that cancel + delivered doesn't exceed order
+            if (qtyDelivered + qtyCancel > qtyOrder) {
+                alert('Jumlah Delivery + Cancel tidak boleh melebihi Quantity Order!');
+                document.getElementById('input-qtyCancel').value = Math.max(0, qtyOrder - qtyDelivered);
+            }
+            
+            // Calculate remain
+            const qtyRemain = qtyOrder - qtyDelivered - qtyCancel;
+            document.getElementById('input-qtyRemain').value = qtyRemain > 0 ? qtyRemain : 0;
+        }
+        
+        // Initialize charts
+        function initCharts() {
+            // Status Pengiriman Chart
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            statusChart = new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending', 'Delivered', 'Canceled'],
+                    datasets: [{
+                        data: [0, 0, 0],
+                        backgroundColor: [
+                            '#f39c12',
+                            '#2ecc71',
+                            '#e74c3c'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Plant Performance Chart
+            const plantCtx = document.getElementById('plantChart').getContext('2d');
+            plantChart = new Chart(plantCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Denpasar 2', 'Gianyar'],
+                    datasets: [
+                        {
+                            label: 'Qty Order',
+                            data: [0, 0],
+                            backgroundColor: '#3498db',
+                            borderColor: '#2980b9',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Qty Delivery',
+                            data: [0, 0],
+                            backgroundColor: '#2ecc71',
+                            borderColor: '#27ae60',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Qty Remain',
+                            data: [0, 0],
+                            backgroundColor: '#f39c12',
+                            borderColor: '#e67e22',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Daily Order Chart
+            const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+            dailyChart = new Chart(dailyCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Qty Order Per Day',
+                        data: [],
+                        backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                        borderColor: '#3498db',
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Render list data to table
+        function renderListData(data = orderData) {
+            const tableBody = document.getElementById('list-order-data');
+            
+            tableBody.innerHTML = '';
+            
+            if (data.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="10" style="text-align: center;">Tidak ada data</td>`;
+                tableBody.appendChild(row);
+                return;
+            }
+            
+            data.forEach((item, index) => {
+                const row = document.createElement('tr');
+                
+                // Calculate remaining quantity
+                const qtyRemain = item.status === 'CANCEL' ? 0 : item.qtyOrder - item.qtyDelivered - (item.qtyCancel || 0);
+                
+                // Determine status class
+                let statusClass = '';
+                if (item.status === 'DELIVERED') statusClass = 'status-delivered';
+                else if (item.status === 'PENDING') statusClass = 'status-pending';
+                else if (item.status === 'CANCEL') statusClass = 'status-cancel';
+                
+                row.innerHTML = `
+                    <td>${formatDisplayDate(item.date)}</td>
+                    <td>${item.plant}</td>
+                    <td class="${statusClass}">${item.status === 'DELIVERED' ? 'DELIVERY' : item.status === 'PENDING' ? 'PENDING' : 'CANCEL'}</td>
+                    <td>${item.siteNo}</td>
+                    <td>${item.siteName}</td>
+                    <td>${item.qtyOrder}</td>
+                    <td>${item.qtyDelivered}</td>
+                    <td>${qtyRemain}</td>
+                    <td>${item.qtyCancel || 0}</td>
+                    <td class="action-buttons">
+                        <button class="action-btn btn-edit" onclick="editData(${index})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn btn-delete" onclick="deleteData(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Add new data
+        function addData() {
+            const date = document.getElementById('input-date').value;
+            const plant = document.getElementById('input-plant').value;
+            const status = document.getElementById('input-status').value;
+            const siteNo = document.getElementById('input-siteNo').value;
+            const siteName = document.getElementById('input-siteName').value;
+            const qtyOrder = parseInt(document.getElementById('input-qtyOrder').value) || 0;
+            const qtyDelivered = parseInt(document.getElementById('input-qtyDelivered').value) || 0;
+            const qtyCancel = parseInt(document.getElementById('input-qtyCancel').value) || 0;
+            
+            // Validate input
+            if (!date || !siteNo || !siteName || qtyOrder <= 0) {
+                alert('Harap isi semua field dengan benar!');
+                return;
+            }
+            
+            if (qtyDelivered + qtyCancel > qtyOrder) {
+                alert('Jumlah Delivery + Cancel tidak boleh melebihi Quantity Order!');
+                return;
+            }
+            
+            if (editIndex === -1) {
+                // Add new data
+                orderData.push({
+                    date,
+                    plant,
+                    status,
+                    siteNo,
+                    siteName,
+                    qtyOrder,
+                    qtyDelivered,
+                    qtyCancel
+                });
+                
+                showNotification('Data berhasil ditambahkan!');
+            } else {
+                // Update existing data
+                orderData[editIndex] = {
+                    date,
+                    plant,
+                    status,
+                    siteNo,
+                    siteName,
+                    qtyOrder,
+                    qtyDelivered,
+                    qtyCancel
+                };
+                
+                editIndex = -1;
+                document.getElementById('add-data').innerHTML = '<i class="fas fa-plus"></i> Add Row';
+                showNotification('Data berhasil diupdate!');
+            }
+            
+            // Clear input fields
+            document.getElementById('input-siteNo').value = '';
+            document.getElementById('input-siteName').value = '';
+            document.getElementById('input-qtyOrder').value = '';
+            document.getElementById('input-qtyDelivered').value = '';
+            document.getElementById('input-qtyRemain').value = '';
+            document.getElementById('input-qtyCancel').value = '';
+            
+            // Update display
+            updateLastUpdateTime();
+            renderListData();
+            saveDataToLocalStorage();
+        }
+        
+        // Edit data
+        function editData(index) {
+            const item = orderData[index];
+            
+            document.getElementById('input-date').value = item.date;
+            document.getElementById('input-plant').value = item.plant;
+            document.getElementById('input-status').value = item.status;
+            document.getElementById('input-siteNo').value = item.siteNo;
+            document.getElementById('input-siteName').value = item.siteName;
+            document.getElementById('input-qtyOrder').value = item.qtyOrder;
+            document.getElementById('input-qtyDelivered').value = item.qtyDelivered;
+            document.getElementById('input-qtyCancel').value = item.qtyCancel || 0;
+            
+            // Calculate and set remain value
+            calculateRemain();
+            
+            editIndex = index;
+            document.getElementById('add-data').innerHTML = '<i class="fas fa-save"></i> Update';
+            
+            // Switch to create tab
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelector('[data-tab="create"]').classList.add('active');
+            document.getElementById('create-tab').classList.add('active');
+            
+            // Scroll to input section
+            document.querySelector('.input-section').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Delete data
+        function deleteData(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                orderData.splice(index, 1);
+                
+                updateLastUpdateTime();
+                renderListData();
+                updateDashboard();
+                saveDataToLocalStorage();
+                
+                showNotification('Data berhasil dihapus!');
+            }
+        }
+        
+        // Save data to localStorage
+        function saveDataToLocalStorage() {
+            localStorage.setItem('orderData', JSON.stringify(orderData));
+            showNotification('Data berhasil disimpan!');
+        }
+        
+        // Update list data
+        function updateListData() {
+            saveDataToLocalStorage();
+            updateDashboard();
+            showNotification('Data berhasil diupdate! Dashboard telah diperbarui.');
+        }
+        
+        // Apply list filter
+        function applyListFilter() {
+            const startDate = new Date(document.getElementById('list-start-date').value);
+            const endDate = new Date(document.getElementById('list-end-date').value);
+            const plantFilter = document.getElementById('list-plant-filter').value;
+            const statusFilter = document.getElementById('list-status-filter').value;
+            
+            // Filter data based on criteria
+            let filteredData = orderData.filter(item => {
+                const itemDate = new Date(item.date);
+                
+                // Date filter
+                if (itemDate < startDate || itemDate > endDate) return false;
+                
+                // Plant filter
+                if (plantFilter !== 'all' && item.plant !== plantFilter) return false;
+                
+                // Status filter
+                if (statusFilter !== 'all' && item.status !== statusFilter) return false;
+                
+                return true;
+            });
+            
+            // Render filtered data
+            renderListData(filteredData);
+            
+            // Show notification
+            showNotification(`Filter diterapkan. Menampilkan ${filteredData.length} data.`);
+        }
+        
+        // Reset list filter
+        function resetListFilter() {
+            document.getElementById('list-start-date').value = '2025-09-01';
+            document.getElementById('list-end-date').value = '2025-09-05';
+            document.getElementById('list-plant-filter').value = 'all';
+            document.getElementById('list-status-filter').value = 'all';
+            
+            // Render all data
+            renderListData();
+            
+            // Show notification
+            showNotification('Filter direset. Menampilkan semua data.');
+        }
+        
+        // Apply dashboard filter
+        function applyDashboardFilter() {
+            updateDashboard();
+            showNotification('Filter dashboard diterapkan.');
+        }
+        
+        // Reset dashboard filter
+        function resetDashboardFilter() {
+            document.getElementById('dashboard-start-date').value = '2025-09-01';
+            document.getElementById('dashboard-end-date').value = '2025-09-05';
+            document.getElementById('dashboard-plant-filter').value = 'all';
+            document.getElementById('dashboard-status-filter').value = 'all';
+            
+            updateDashboard();
+            showNotification('Filter dashboard direset.');
+        }
+        
+        // Update dashboard information
+        function updateDashboard() {
+            const startDate = new Date(document.getElementById('dashboard-start-date').value);
+            const endDate = new Date(document.getElementById('dashboard-end-date').value);
+            const plantFilter = document.getElementById('dashboard-plant-filter').value;
+            const statusFilter = document.getElementById('dashboard-status-filter').value;
+            
+            // Filter data based on criteria
+            let filteredData = orderData.filter(item => {
+                const itemDate = new Date(item.date);
+                
+                // Date filter
+                if (itemDate < startDate || itemDate > endDate) return false;
+                
+                // Plant filter
+                if (plantFilter !== 'all' && item.plant !== plantFilter) return false;
+                
+                // Status filter
+                if (statusFilter !== 'all' && item.status !== statusFilter) return false;
+                
+                return true;
+            });
+            
+            // Calculate totals
+            let totalOrder = 0;
+            let totalDelivery = 0;
+            let totalRemain = 0;
+            let totalCancel = 0;
+            
+            // Calculate plant-specific stats
+            const plants = new Set();
+            const projects = new Set();
+            const projectsRemain = new Set();
+            
+            const denpasarData = filteredData.filter(item => item.plant === 'DENPASAR 2');
+            const gianyarData = filteredData.filter(item => item.plant === 'GIANYAR');
+            
+            let denpasarOrder = 0;
+            let denpasarDelivery = 0;
+            let denpasarRemain = 0;
+            let denpasarCancel = 0;
+            let denpasarProjectsRemain = new Set();
+            
+            let gianyarOrder = 0;
+            let gianyarDelivery = 0;
+            let gianyarRemain = 0;
+            let gianyarCancel = 0;
+            let gianyarProjectsRemain = new Set();
+            
+            filteredData.forEach(item => {
+                // Calculate remaining quantity
+                const qtyRemain = item.status === 'CANCEL' ? 0 : item.qtyOrder - item.qtyDelivered - (item.qtyCancel || 0);
+                
+                totalOrder += item.qtyOrder;
+                totalDelivery += item.qtyDelivered;
+                totalRemain += qtyRemain;
+                totalCancel += (item.qtyCancel || 0);
+                
+                plants.add(item.plant);
+                projects.add(item.siteNo);
+                
+                if (qtyRemain > 0) {
+                    projectsRemain.add(item.siteNo);
+                }
+                
+                // Denpasar data
+                if (item.plant === 'DENPASAR 2') {
+                    denpasarOrder += item.qtyOrder;
+                    denpasarDelivery += item.qtyDelivered;
+                    denpasarRemain += qtyRemain;
+                    denpasarCancel += (item.qtyCancel || 0);
+                    
+                    if (qtyRemain > 0) {
+                        denpasarProjectsRemain.add(item.siteNo);
+                    }
+                }
+                
+                // Gianyar data
+                if (item.plant === 'GIANYAR') {
+                    gianyarOrder += item.qtyOrder;
+                    gianyarDelivery += item.qtyDelivered;
+                    gianyarRemain += qtyRemain;
+                    gianyarCancel += (item.qtyCancel || 0);
+                    
+                    if (qtyRemain > 0) {
+                        gianyarProjectsRemain.add(item.siteNo);
+                    }
+                }
+            });
+            
+            // Update KPI cards
+            document.getElementById('total-order').textContent = `${totalOrder} m³`;
+            document.getElementById('total-plant').textContent = plants.size;
+            document.getElementById('total-delivery').textContent = `${totalDelivery} m³`;
+            document.getElementById('total-remain').textContent = `${totalRemain} m³`;
+            document.getElementById('total-cancel').textContent = `${totalCancel} m³`;
+            document.getElementById('total-project').textContent = projects.size;
+            document.getElementById('total-project-remain').textContent = projectsRemain.size;
+            
+            // Update plant summaries
+            document.getElementById('denpasar-order').textContent = denpasarOrder;
+            document.getElementById('denpasar-delivered').textContent = denpasarDelivery;
+            document.getElementById('denpasar-remain').textContent = denpasarRemain;
+            document.getElementById('denpasar-project-remain').textContent = denpasarProjectsRemain.size;
+            
+            document.getElementById('gianyar-order').textContent = gianyarOrder;
+            document.getElementById('gianyar-delivered').textContent = gianyarDelivery;
+            document.getElementById('gianyar-remain').textContent = gianyarRemain;
+            document.getElementById('gianyar-project-remain').textContent = gianyarProjectsRemain.size;
+            
+            // Calculate percentages
+            const denpasarPercentage = denpasarOrder > 0 ? Math.round((denpasarDelivery / denpasarOrder) * 100) : 0;
+            const gianyarPercentage = gianyarOrder > 0 ? Math.round((gianyarDelivery / gianyarOrder) * 100) : 0;
+            
+            document.getElementById('denpasar-percentage').textContent = denpasarPercentage;
+            document.getElementById('gianyar-percentage').textContent = gianyarPercentage;
+            
+            // Update progress bars
+            const denpasarDeliveredPercent = denpasarOrder > 0 ? Math.round((denpasarDelivery / denpasarOrder) * 100) : 0;
+            const denpasarRemainPercent = denpasarOrder > 0 ? Math.round((denpasarRemain / denpasarOrder) * 100) : 0;
+            const denpasarCancelPercent = denpasarOrder > 0 ? Math.round((denpasarCancel / denpasarOrder) * 100) : 0;
+            
+            const gianyarDeliveredPercent = gianyarOrder > 0 ? Math.round((gianyarDelivery / gianyarOrder) * 100) : 0;
+            const gianyarRemainPercent = gianyarOrder > 0 ? Math.round((gianyarRemain / gianyarOrder) * 100) : 0;
+            const gianyarCancelPercent = gianyarOrder > 0 ? Math.round((gianyarCancel / gianyarOrder) * 100) : 0;
+            
+            document.getElementById('denpasar-progress-delivered').style.width = `${denpasarDeliveredPercent}%`;
+            document.getElementById('denpasar-progress-remain').style.width = `${denpasarRemainPercent}%`;
+            document.getElementById('denpasar-progress-cancel').style.width = `${denpasarCancelPercent}%`;
+            
+            document.getElementById('gianyar-progress-delivered').style.width = `${gianyarDeliveredPercent}%`;
+            document.getElementById('gianyar-progress-remain').style.width = `${gianyarRemainPercent}%`;
+            document.getElementById('gianyar-progress-cancel').style.width = `${gianyarCancelPercent}%`;
+            
+            // Update charts
+            updateCharts(filteredData, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain);
+            
+            // Render project remain details
+            renderProjectRemainDetails(filteredData.filter(item => {
+                const qtyRemain = item.status === 'CANCEL' ? 0 : item.qtyOrder - item.qtyDelivered - (item.qtyCancel || 0);
+                return qtyRemain > 0;
+            }));
+        }
+        
+        // Update charts with new data
+        function updateCharts(data, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain) {
+            // Count status
+            let pendingCount = 0;
+            let deliveredCount = 0;
+            let canceledCount = 0;
+            
+            data.forEach(item => {
+                if (item.status === 'PENDING') pendingCount++;
+                else if (item.status === 'DELIVERED') deliveredCount++;
+                else if (item.status === 'CANCEL') canceledCount++;
+            });
+            
+            // Update status chart
+            statusChart.data.datasets[0].data = [pendingCount, deliveredCount, canceledCount];
+            statusChart.update();
+            
+            // Update plant chart
+            plantChart.data.datasets[0].data = [denpasarOrder, gianyarOrder];
+            plantChart.data.datasets[1].data = [denpasarDelivery, gianyarDelivery];
+            plantChart.data.datasets[2].data = [denpasarRemain, gianyarRemain];
+            plantChart.update();
+            
+            // Update daily chart with dates
+            const dateData = {};
+            data.forEach(item => {
+                const date = formatDisplayDate(item.date);
+                if (!dateData[date]) {
+                    dateData[date] = 0;
+                }
+                dateData[date] += item.qtyOrder;
+            });
+            
+            const dates = Object.keys(dateData).sort();
+            const orderData = dates.map(date => dateData[date]);
+            
+            dailyChart.data.labels = dates;
+            dailyChart.data.datasets[0].data = orderData;
+            dailyChart.update();
+        }
+        
+        // Render project remain details
+        function renderProjectRemainDetails(data) {
+            const tableBody = document.getElementById('dashboard-project-data');
+            
+            tableBody.innerHTML = '';
+            
+            if (data.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="9" style="text-align: center;">Tidak ada data project remain</td>`;
+                tableBody.appendChild(row);
+                return;
+            }
+            
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                
+                // Calculate remaining quantity
+                const qtyRemain = item.status === 'CANCEL' ? 0 : item.qtyOrder - item.qtyDelivered - (item.qtyCancel || 0);
+                
+                // Determine status class
+                let statusClass = '';
+                if (item.status === 'DELIVERED') statusClass = 'status-delivered';
+                else if (item.status === 'PENDING') statusClass = 'status-pending';
+                else if (item.status === 'CANCEL') statusClass = 'status-cancel';
+                
+                row.innerHTML = `
+                    <td>${formatDisplayDate(item.date)}</td>
+                    <td>${item.plant}</td>
+                    <td class="${statusClass}">${item.status === 'DELIVERED' ? 'DELIVERY' : item.status === 'PENDING' ? 'PENDING' : 'CANCEL'}</td>
+                    <td>${item.siteNo}</td>
+                    <td>${item.siteName}</td>
+                    <td>${item.qtyOrder}</td>
+                    <td>${item.qtyDelivered}</td>
+                    <td>${qtyRemain}</td>
+                    <td>${item.qtyCancel || 0}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Show notification
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.backgroundColor = '#2c3e50';
+            notification.style.color = 'white';
+            notification.style.padding = '10px 15px';
+            notification.style.borderRadius = '5px';
+            notification.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            notification.style.zIndex = '1000';
+            notification.style.opacity = '0';
+            notification.style.transition = 'opacity 0.3s ease';
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.opacity = '1';
+            }, 10);
+            
+            // Animate out and remove after 3 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
