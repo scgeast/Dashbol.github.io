@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Daily Delivery  Monitoring</title>
+    <title>Dashboard Daily Delivery Monitoring</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -87,7 +87,7 @@
             background: white;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0  4px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
         
         .tab {
@@ -149,7 +149,7 @@
             font-size: 12px;
         }
         
-        .input-group input, . .input-group select {
+        .input-group input, .input-group select {
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -210,7 +210,7 @@
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0,  0.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             position: relative;
         }
         
@@ -251,7 +251,7 @@
             font-size: 14px;
         }
         
-        .filter-b uttons {
+        .filter-buttons {
             display: flex;
             gap: 10px;
             margin-top: 10px;
@@ -283,7 +283,7 @@
             color: var(--dark);
         }
         
-         .btn-secondary:hover {
+        .btn-secondary:hover {
             background-color: #dde4e6;
         }
         
@@ -338,7 +338,7 @@
             border-radius: 10px;
             padding: 15px;
             text-align: center;
-            box-shadow: 0 4 px 15px rgba(0, 0, 0, 0. 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             color: white;
             min-height: 100px;
             display: flex;
@@ -409,7 +409,7 @@
         
         .progress-cancel {
             background: var(--accent);
-         }
+        }
         
         .data-table {
             width: 100%;
@@ -436,9 +436,9 @@
         /* Untuk tabel - kolom quantity lebih sempit */
         .data-table th:nth-child(6),
         .data-table th:nth-child(7), 
-        . data-table th:nth-child(8),
+        .data-table th:nth-child(8),
         .data-table th:nth-child(9),
-         .data-table td:nth-child(6),
+        .data-table td:nth-child(6),
         .data-table td:nth-child(7),
         .data-table td:nth-child(8),
         .data-table td:nth-child(9) {
@@ -544,7 +544,7 @@
             align-items: center;
             margin-bottom: 20px;
             padding-bottom: 15px;
-             border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #eee;
         }
         
         .close-sidebar {
@@ -607,7 +607,7 @@
             }
             
             .kpi-grid {
-                grid-template-columns: 1fr  1fr;
+                grid-template-columns: 1fr 1fr;
             }
             
             .filter-sidebar {
@@ -621,7 +621,7 @@
                 padding: 10px;
             }
             
-            . card {
+            .card {
                 padding: 15px;
             }
             
@@ -645,7 +645,7 @@
             <div class="header-top">
                 <div class="logo">
                     <i class="fas fa-hard-hat fa-2x"></i>
-                    <h1>Daily Delivery  Monitoring</h1>
+                    <h1>Daily Delivery Monitoring</h1>
                 </div>
                 <div class="date-filter">
                     <i class="far fa-calendar-alt"></i>
@@ -661,7 +661,7 @@
                 <span>Create List Order</span>
             </div>
             <div class="tab" data-tab="list">
-                < i class="fas fa-list"></i>
+                <i class="fas fa-list"></i>
                 <span>List Order</span>
             </div>
             <div class="tab" data-tab="dashboard">
@@ -703,12 +703,12 @@
                     
                     <div class="input-group">
                         <label for="input-siteNo">Site No</label>
-                        <input type="text" id="input-siteNo" placeholder="Nomor Site" readonly>
+                        <input type="text" id="input-siteNo" placeholder="Nomor Site">
                     </div>
                     
                     <div class="input-group">
                         <label for="input-siteName">Site Name</label>
-                        <input type="text" id="input-siteName" placeholder="Nama Site" oninput="generateSiteNo()">
+                        <input type="text" id="input-siteName" placeholder="Nama Site">
                     </div>
                     
                     <div class="input-group">
@@ -717,7 +717,7 @@
                     </div>
                     
                     <div class="input-group">
-                        <label for="input-q tyDelivered">Qty Delivery</label>
+                        <label for="input-qtyDelivered">Qty Delivery</label>
                         <input type="number" id="input-qtyDelivered" placeholder="m³" min="0" oninput="calculateRemain()">
                     </div>
                     
@@ -752,14 +752,14 @@
                 </div>
                 <div class="filter-controls">
                     <div class="filter-group">
-                        <label for ="list-start-date">Dari Tanggal:</label>
+                        <label for="list-start-date">Dari Tanggal:</label>
                         <input type="date" id="list-start-date" value="2025-09-01">
                     </div>
                     <div class="filter-group">
                         <label for="list-end-date">Sampai Tanggal:</label>
-                        <input type ="date" id="list-end-date" value="2025-09-05">
+                        <input type="date" id="list-end-date" value="2025-09-05">
                     </div>
-                    < div class="filter-group">
+                    <div class="filter-group">
                         <label for="list-plant-filter">Plant:</label>
                         <select id="list-plant-filter">
                             <option value="all">Semua Plant</option>
@@ -892,10 +892,10 @@
                 </div>
                 <div class="kpi-card">
                     <h3>Total Qty Remain</h3>
-                    <div class="value " id="total-remain">0 m³</div>
+                    <div class="value" id="total-remain">0 m³</div>
                 </div>
                 <div class="kpi-card">
-                    <h3>Total Qty Cancel</ h3>
+                    <h3>Total Qty Cancel</h3>
                     <div class="value" id="total-cancel">0 m³</div>
                 </div>
                 <div class="kpi-card">
@@ -941,7 +941,7 @@
             </div>
             
             <div class="summary">
-                < div class="card">
+                <div class="card">
                     <div class="card-header">
                         <h2>Daily Delivery Summary</h2>
                         <i class="fas fa-file-alt"></i>
@@ -1009,7 +1009,7 @@
         </div>
         
         <footer>
-            <p>Dashboard Daily Delivery  Monitoring &copy; 2025 - L=23-51Xe</p>
+            <p>Dashboard Daily Delivery Monitoring &copy; 2025 - L23-51Xe</p>
         </footer>
     </div>
 
@@ -1072,18 +1072,6 @@
             document.getElementById('dashboard-start-date').value = formatDate(sevenDaysAgo);
             document.getElementById('dashboard-end-date').value = formatDate(today);
         });
-        
-        // Generate Site No from Site Name
-        function generateSiteNo() {
-            const siteName = document.getElementById('input-siteName').value;
-            if (siteName) {
-                // Take first 6 characters, convert to uppercase, and remove spaces
-                const siteNo = siteName.substring(0, 6).toUpperCase().replace(/\s/g, '');
-                document.getElementById('input-siteNo').value = siteNo;
-            } else {
-                document.getElementById('input-siteNo').value = '';
-            }
-        }
         
         // Toggle sidebar
         function toggleSidebar() {
@@ -1177,17 +1165,6 @@
                     plugins: {
                         legend: {
                             position: 'bottom'
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = Math.round((value / total) * 100);
-                                    return `${label}: ${value} m³ (${percentage}%)`;
-                                }
-                            }
                         }
                     }
                 }
@@ -1228,20 +1205,7 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Volume (m³)'
-                            }
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.dataset.label}: ${context.raw} m³`;
-                                }
-                            }
+                            beginAtZero: true
                         }
                     }
                 }
@@ -1267,26 +1231,7 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Volume (m³)'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Tanggal'
-                            }
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `Qty Order: ${context.raw} m³`;
-                                }
-                            }
+                            beginAtZero: true
                         }
                     }
                 }
@@ -1574,12 +1519,7 @@
             let gianyarDelivery = 0;
             let gianyarRemain = 0;
             let gianyarCancel = 0;
-            let gianyarProjects Remain = new Set();
-            
-            // Calculate status-based quantities for the chart
-            let pendingQty = 0;
-            let deliveredQty = 0;
-            let canceledQty = 0;
+            let gianyarProjectsRemain = new Set();
             
             filteredData.forEach(item => {
                 // Calculate remaining quantity
@@ -1620,15 +1560,6 @@
                         gianyarProjectsRemain.add(item.siteNo);
                     }
                 }
-                
-                // Calculate status-based quantities for the chart
-                if (item.status === 'PENDING') {
-                    pendingQty += item.qtyDelivered;
-                } else if (item.status === 'DELIVERED') {
-                    deliveredQty += item.qtyDelivered;
-                } else if (item.status === 'CANCEL') {
-                    canceledQty += item.qtyDelivered;
-                }
             });
             
             // Update KPI cards
@@ -1637,7 +1568,7 @@
             document.getElementById('total-delivery').textContent = `${totalDelivery} m³`;
             document.getElementById('total-remain').textContent = `${totalRemain} m³`;
             document.getElementById('total-cancel').textContent = `${totalCancel} m³`;
-            document.getElementById('total-project'). textContent = projects.size;
+            document.getElementById('total-project').textContent = projects.size;
             document.getElementById('total-project-remain').textContent = projectsRemain.size;
             
             // Update plant summaries
@@ -1667,7 +1598,7 @@
             const gianyarRemainPercent = gianyarOrder > 0 ? Math.round((gianyarRemain / gianyarOrder) * 100) : 0;
             const gianyarCancelPercent = gianyarOrder > 0 ? Math.round((gianyarCancel / gianyarOrder) * 100) : 0;
             
-            document.getElementById('denpasar-progress-delivered').style.width = `${denpasar DeliveredPercent}%`;
+            document.getElementById('denpasar-progress-delivered').style.width = `${denpasarDeliveredPercent}%`;
             document.getElementById('denpasar-progress-remain').style.width = `${denpasarRemainPercent}%`;
             document.getElementById('denpasar-progress-cancel').style.width = `${denpasarCancelPercent}%`;
             
@@ -1675,8 +1606,8 @@
             document.getElementById('gianyar-progress-remain').style.width = `${gianyarRemainPercent}%`;
             document.getElementById('gianyar-progress-cancel').style.width = `${gianyarCancelPercent}%`;
             
-            // Update charts with the correct data (quantity values, not count)
-            updateCharts(filteredData, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain, pendingQty, deliveredQty, canceledQty);
+            // Update charts
+            updateCharts(filteredData, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain);
             
             // Render project remain details
             renderProjectRemainDetails(filteredData.filter(item => {
@@ -1686,9 +1617,20 @@
         }
         
         // Update charts with new data
-        function updateCharts(data, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain, pendingQty, deliveredQty, canceledQty) {
-            // Update status chart with quantities (not counts)
-            statusChart.data.datasets[0].data = [pendingQty, deliveredQty, canceledQty];
+        function updateCharts(data, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain) {
+            // Count status
+            let pendingCount = 0;
+            let deliveredCount = 0;
+            let canceledCount = 0;
+            
+            data.forEach(item => {
+                if (item.status === 'PENDING') pendingCount++;
+                else if (item.status === 'DELIVERED') deliveredCount++;
+                else if (item.status === 'CANCEL') canceledCount++;
+            });
+            
+            // Update status chart
+            statusChart.data.datasets[0].data = [pendingCount, deliveredCount, canceledCount];
             statusChart.update();
             
             // Update plant chart
@@ -1732,7 +1674,7 @@
                 const row = document.createElement('tr');
                 
                 // Calculate remaining quantity
-                const qtyRemain = item.status === 'CANCEL' ? 0 : item.qtyOrder - item.qty Delivered - (item.qtyCancel || 0);
+                const qtyRemain = item.status === 'CANCEL' ? 0 : item.qtyOrder - item.qtyDelivered - (item.qtyCancel || 0);
                 
                 // Determine status class
                 let statusClass = '';
