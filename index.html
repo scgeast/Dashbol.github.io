@@ -130,7 +130,7 @@
         
         .input-row {
             display: grid;
-            grid-template-columns: 0.9fr 0.8fr 0.8fr 1fr 1.2fr 0.7fr 0.7fr 0.7fr 0.7fr auto;
+            grid-template-columns: 0.8fr 0.8fr 0.8fr 1fr 1.2fr 0.8fr 0.8fr 0.8fr 0.8fr auto;
             gap: 8px;
             margin-bottom: 15px;
             align-items: end;
@@ -202,22 +202,6 @@
             margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             position: relative;
-        }
-        
-        .filter-toggle {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            cursor: pointer;
-            color: var(--secondary);
-        }
-        
-        .filter-content {
-            display: block;
-        }
-        
-        .filter-content.collapsed {
-            display: none;
         }
         
         .filter-title {
@@ -635,7 +619,7 @@
                     
                     <div class="input-group">
                         <label for="input-siteNo">Site No</label>
-                        <input type="text" id="input-siteNo" placeholder="No. Site">
+                        <input type="text" id="input-siteNo" placeholder="Nomor Site">
                     </div>
                     
                     <div class="input-group">
@@ -686,45 +670,43 @@
                     <i class="fas fa-filter"></i>
                     <h2>Filter Data</h2>
                 </div>
-                <div class="filter-content">
-                    <div class="filter-controls">
-                        <div class="filter-group">
-                            <label for="list-start-date">Dari Tanggal:</label>
-                            <input type="date" id="list-start-date" value="2025-09-01">
-                        </div>
-                        <div class="filter-group">
-                            <label for="list-end-date">Sampai Tanggal:</label>
-                            <input type="date" id="list-end-date" value="2025-09-05">
-                        </div>
-                        <div class="filter-group">
-                            <label for="list-plant-filter">Plant:</label>
-                            <select id="list-plant-filter">
-                                <option value="all">Semua Plant</option>
-                                <option value="DENPASAR 2">Denpasar 2</option>
-                                <option value="GIANYAR">Gianyar</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="list-status-filter">Status:</label>
-                            <select id="list-status-filter">
-                                <option value="all">Semua Status</option>
-                                <option value="PENDING">Pending</option>
-                                <option value="DELIVERED">Delivery</option>
-                                <option value="CANCEL">Cancel</option>
-                            </select>
-                        </div>
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="list-start-date">Dari Tanggal:</label>
+                        <input type="date" id="list-start-date" value="2025-09-01">
                     </div>
-                    <div class="filter-buttons">
-                        <button class="btn btn-primary" id="list-apply-filter">
-                            <i class="fas fa-check"></i> Terapkan Filter
-                        </button>
-                        <button class="btn btn-secondary" id="list-reset-filter">
-                            <i class="fas fa-sync"></i> Reset Filter
-                        </button>
-                        <button class="btn btn-success" id="list-update-data">
-                            <i class="fas fa-save"></i> Update
-                        </button>
+                    <div class="filter-group">
+                        <label for="list-end-date">Sampai Tanggal:</label>
+                        <input type="date" id="list-end-date" value="2025-09-05">
                     </div>
+                    <div class="filter-group">
+                        <label for="list-plant-filter">Plant:</label>
+                        <select id="list-plant-filter">
+                            <option value="all">Semua Plant</option>
+                            <option value="DENPASAR 2">Denpasar 2</option>
+                            <option value="GIANYAR">Gianyar</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="list-status-filter">Status:</label>
+                        <select id="list-status-filter">
+                            <option value="all">Semua Status</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="DELIVERED">Delivery</option>
+                            <option value="CANCEL">Cancel</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-buttons">
+                    <button class="btn btn-primary" id="list-apply-filter">
+                        <i class="fas fa-check"></i> Terapkan Filter
+                    </button>
+                    <button class="btn btn-secondary" id="list-reset-filter">
+                        <i class="fas fa-sync"></i> Reset Filter
+                    </button>
+                    <button class="btn btn-success" id="list-update-data">
+                        <i class="fas fa-save"></i> Update
+                    </button>
                 </div>
             </div>
             
@@ -764,49 +746,44 @@
                     <i class="fas fa-filter"></i>
                     <h2>Filter Data</h2>
                 </div>
-                <div class="filter-toggle" id="dashboard-filter-toggle">
-                    <i class="fas fa-chevron-up"></i>
-                </div>
-                <div class="filter-content" id="dashboard-filter-content">
-                    <div class="filter-controls">
-                        <div class="filter-group">
-                            <label for="dashboard-start-date">Dari Tanggal:</label>
-                            <input type="date" id="dashboard-start-date" value="2025-09-01">
-                        </div>
-                        <div class="filter-group">
-                            <label for="dashboard-end-date">Sampai Tanggal:</label>
-                            <input type="date" id="dashboard-end-date" value="2025-09-05">
-                        </div>
-                        <div class="filter-group">
-                            <label for="dashboard-plant-filter">Plant:</label>
-                            <select id="dashboard-plant-filter">
-                                <option value="all">Semua Plant</option>
-                                <option value="DENPASAR 2">Denpasar 2</option>
-                                <option value="GIANYAR">Gianyar</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="dashboard-status-filter">Status:</label>
-                            <select id="dashboard-status-filter">
-                                <option value="all">Semua Status</option>
-                                <option value="PENDING">Pending</option>
-                                <option value="DELIVERED">Delivery</option>
-                                <option value="CANCEL">Cancel</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="filter-buttons">
-                        <button class="btn btn-primary" id="dashboard-apply-filter">
-                            <i class="fas fa-check"></i> Terapkan Filter
-                        </button>
-                        <button class="btn btn-secondary" id="dashboard-reset-filter">
-                            <i class="fas fa-sync"></i> Reset Filter
-                        </button>
-                    </div>
-                </div>
-                <div class="last-update" style="margin-top: 15px;">
+                <div class="last-update" style="position: absolute; right: 30px; top: 30px;">
                     <i class="fas fa-clock"></i>
                     <span>Last update: <span id="last-update-time">--:--:--</span></span>
+                </div>
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="dashboard-start-date">Dari Tanggal:</label>
+                        <input type="date" id="dashboard-start-date" value="2025-09-01">
+                    </div>
+                    <div class="filter-group">
+                        <label for="dashboard-end-date">Sampai Tanggal:</label>
+                        <input type="date" id="dashboard-end-date" value="2025-09-05">
+                    </div>
+                    <div class="filter-group">
+                        <label for="dashboard-plant-filter">Plant:</label>
+                        <select id="dashboard-plant-filter">
+                            <option value="all">Semua Plant</option>
+                            <option value="DENPASAR 2">Denpasar 2</option>
+                            <option value="GIANYAR">Gianyar</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="dashboard-status-filter">Status:</label>
+                        <select id="dashboard-status-filter">
+                            <option value="all">Semua Status</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="DELIVERED">Delivery</option>
+                            <option value="CANCEL">Cancel</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-buttons">
+                    <button class="btn btn-primary" id="dashboard-apply-filter">
+                        <i class="fas fa-check"></i> Terapkan Filter
+                    </button>
+                    <button class="btn btn-secondary" id="dashboard-reset-filter">
+                        <i class="fas fa-sync"></i> Reset Filter
+                    </button>
                 </div>
             </div>
             
@@ -975,20 +952,6 @@
             document.getElementById('dashboard-apply-filter').addEventListener('click', applyDashboardFilter);
             document.getElementById('dashboard-reset-filter').addEventListener('click', resetDashboardFilter);
             
-            // Filter toggle functionality
-            document.getElementById('dashboard-filter-toggle').addEventListener('click', function() {
-                const filterContent = document.getElementById('dashboard-filter-content');
-                const toggleIcon = this.querySelector('i');
-                
-                filterContent.classList.toggle('collapsed');
-                
-                if (filterContent.classList.contains('collapsed')) {
-                    toggleIcon.className = 'fas fa-chevron-down';
-                } else {
-                    toggleIcon.className = 'fas fa-chevron-up';
-                }
-            });
-            
             // Tab functionality
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', () => {
@@ -1107,13 +1070,6 @@
                     plugins: {
                         legend: {
                             position: 'bottom'
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.raw + ' m³';
-                                }
-                            }
                         }
                     }
                 }
@@ -1154,11 +1110,7 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Volume (m³)'
-                            }
+                            beginAtZero: true
                         }
                     }
                 }
@@ -1184,17 +1136,7 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Volume (m³)'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Tanggal'
-                            }
+                            beginAtZero: true
                         }
                     }
                 }
@@ -1340,7 +1282,7 @@
             // Switch to create tab
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelector('[data-tab="create"]').classlassList.add('active');
+            document.querySelector('[data-tab="create"]').classList.add('active');
             document.getElementById('create-tab').classList.add('active');
             
             // Scroll to input section
@@ -1464,11 +1406,6 @@
             let totalRemain = 0;
             let totalCancel = 0;
             
-            // Calculate status-based delivery quantities
-            let pendingDelivery = 0;
-            let deliveredDelivery = 0;
-            let canceledDelivery = 0;
-            
             // Calculate plant-specific stats
             const plants = new Set();
             const projects = new Set();
@@ -1497,15 +1434,6 @@
                 totalDelivery += item.qtyDelivered;
                 totalRemain += qtyRemain;
                 totalCancel += (item.qtyCancel || 0);
-                
-                // Calculate delivery by status
-                if (item.status === 'PENDING') {
-                    pendingDelivery += item.qtyDelivered;
-                } else if (item.status === 'DELIVERED') {
-                    deliveredDelivery += item.qtyDelivered;
-                } else if (item.status === 'CANCEL') {
-                    canceledDelivery += item.qtyDelivered;
-                }
                 
                 plants.add(item.plant);
                 projects.add(item.siteNo);
@@ -1583,8 +1511,8 @@
             document.getElementById('gianyar-progress-remain').style.width = `${gianyarRemainPercent}%`;
             document.getElementById('gianyar-progress-cancel').style.width = `${gianyarCancelPercent}%`;
             
-            // Update charts with correct data
-            updateCharts(filteredData, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain, pendingDelivery, deliveredDelivery, canceledDelivery);
+            // Update charts
+            updateCharts(filteredData, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain);
             
             // Render project remain details
             renderProjectRemainDetails(filteredData.filter(item => {
@@ -1594,9 +1522,20 @@
         }
         
         // Update charts with new data
-        function updateCharts(data, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain, pendingDelivery, deliveredDelivery, canceledDelivery) {
-            // Update status chart with delivery quantities by status
-            statusChart.data.datasets[0].data = [pendingDelivery, deliveredDelivery, canceledDelivery];
+        function updateCharts(data, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain) {
+            // Count status
+            let pendingCount = 0;
+            let deliveredCount = 0;
+            let canceledCount = 0;
+            
+            data.forEach(item => {
+                if (item.status === 'PENDING') pendingCount++;
+                else if (item.status === 'DELIVERED') deliveredCount++;
+                else if (item.status === 'CANCEL') canceledCount++;
+            });
+            
+            // Update status chart
+            statusChart.data.datasets[0].data = [pendingCount, deliveredCount, canceledCount];
             statusChart.update();
             
             // Update plant chart
@@ -1671,7 +1610,7 @@
             notification.textContent = message;
             notification.style.position = 'fixed';
             notification.style.bottom = '20px';
-            notification.style.right: '20px';
+            notification.style.right = '20px';
             notification.style.backgroundColor = '#2c3e50';
             notification.style.color = 'white';
             notification.style.padding = '10px 15px';
