@@ -130,7 +130,7 @@
         
         .input-row {
             display: grid;
-            grid-template-columns: 0.8fr 0.8fr 0.8fr 1fr 1.2fr 0.8fr 0.8fr 0.8fr 0.8fr auto;
+            grid-template-columns: 0.8fr 0.8fr 0.8fr 1fr 1.2fr 0.6fr 0.6fr 0.6fr 0.6fr;
             gap: 8px;
             margin-bottom: 15px;
             align-items: end;
@@ -208,6 +208,7 @@
             display: flex;
             align-items: center;
             margin-bottom: 15px;
+            cursor: pointer;
         }
         
         .filter-title h2 {
@@ -476,6 +477,17 @@
             font-size: 14px;
         }
         
+        .add-row-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+        
+        .collapsed .filter-controls,
+        .collapsed .filter-buttons {
+            display: none;
+        }
+        
         @media (max-width: 1200px) {
             .input-row {
                 grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -646,16 +658,12 @@
                         <label for="input-qtyCancel">Qty Cancel</label>
                         <input type="number" id="input-qtyCancel" placeholder="m³" min="0" oninput="calculateRemainFromCancel()">
                     </div>
-                    
-                    <div class="input-group">
-                        <label>&nbsp;</label>
-                        <button class="btn btn-success" id="add-data">
-                            <i class="fas fa-plus"></i> Add Row
-                        </button>
-                    </div>
                 </div>
                 
                 <div class="filter-buttons">
+                    <button class="btn btn-success" id="add-data">
+                        <i class="fas fa-plus"></i> Add Row
+                    </button>
                     <button class="btn btn-primary" id="save-data">
                         <i class="fas fa-save"></i> Save
                     </button>
@@ -741,10 +749,11 @@
         
         <!-- Dashboard Tab -->
         <div class="tab-content" id="dashboard-tab">
-            <div class="filter-section">
-                <div class="filter-title">
+            <div class="filter-section" id="dashboard-filter">
+                <div class="filter-title" onclick="toggleFilter()">
                     <i class="fas fa-filter"></i>
                     <h2>Filter Data</h2>
+                    <i class="fas fa-chevron-down" id="filter-chevron" style="margin-left: auto;"></i>
                 </div>
                 <div class="last-update" style="position: absolute; right: 30px; top: 30px;">
                     <i class="fas fa-clock"></i>
@@ -1017,6 +1026,20 @@
             document.getElementById('last-update-time').textContent = timeString;
         }
         
+        // Toggle filter visibility
+        function toggleFilter() {
+            const filterSection = document.getElementById('dashboard-filter');
+            const chevron = document.getElementById('filter-chevron');
+            
+            filterSection.classList.toggle('collapsed');
+            
+            if (filterSection.classList.contains('collapsed')) {
+                chevron.className = 'fas fa-chevron-up';
+            } else {
+                chevron.className = 'fas fa-chevron-down';
+            }
+        }
+        
         // Calculate Qty Remain
         function calculateRemain() {
             const qtyOrder = parseInt(document.getElementById('input-qtyOrder').value) || 0;
@@ -1070,6 +1093,17 @@
                     plugins: {
                         legend: {
                             position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value} m³ (${percentage}%)`;
+                                }
+                            }
                         }
                     }
                 }
@@ -1110,7 +1144,20 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Volume (m³)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw} m³`;
+                                }
+                            }
                         }
                     }
                 }
@@ -1136,7 +1183,26 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Volume (m³)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tanggal'
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Qty Order: ${context.raw} m³`;
+                                }
+                            }
                         }
                     }
                 }
@@ -1426,6 +1492,11 @@
             let gianyarCancel = 0;
             let gianyarProjectsRemain = new Set();
             
+            // Calculate status-based quantities for the chart
+            let pendingQty = 0;
+            let deliveredQty = 0;
+            let canceledQty = 0;
+            
             filteredData.forEach(item => {
                 // Calculate remaining quantity
                 const qtyRemain = item.status === 'CANCEL' ? 0 : item.qtyOrder - item.qtyDelivered - (item.qtyCancel || 0);
@@ -1464,6 +1535,15 @@
                     if (qtyRemain > 0) {
                         gianyarProjectsRemain.add(item.siteNo);
                     }
+                }
+                
+                // Calculate status-based quantities
+                if (item.status === 'PENDING') {
+                    pendingQty += item.qtyDelivered;
+                } else if (item.status === 'DELIVERED') {
+                    deliveredQty += item.qtyDelivered;
+                } else if (item.status === 'CANCEL') {
+                    canceledQty += item.qtyDelivered;
                 }
             });
             
@@ -1512,7 +1592,7 @@
             document.getElementById('gianyar-progress-cancel').style.width = `${gianyarCancelPercent}%`;
             
             // Update charts
-            updateCharts(filteredData, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain);
+            updateCharts(filteredData, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain, pendingQty, deliveredQty, canceledQty);
             
             // Render project remain details
             renderProjectRemainDetails(filteredData.filter(item => {
@@ -1522,20 +1602,9 @@
         }
         
         // Update charts with new data
-        function updateCharts(data, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain) {
-            // Count status
-            let pendingCount = 0;
-            let deliveredCount = 0;
-            let canceledCount = 0;
-            
-            data.forEach(item => {
-                if (item.status === 'PENDING') pendingCount++;
-                else if (item.status === 'DELIVERED') deliveredCount++;
-                else if (item.status === 'CANCEL') canceledCount++;
-            });
-            
-            // Update status chart
-            statusChart.data.datasets[0].data = [pendingCount, deliveredCount, canceledCount];
+        function updateCharts(data, denpasarOrder, denpasarDelivery, denpasarRemain, gianyarOrder, gianyarDelivery, gianyarRemain, pendingQty, deliveredQty, canceledQty) {
+            // Update status chart with quantities
+            statusChart.data.datasets[0].data = [pendingQty, deliveredQty, canceledQty];
             statusChart.update();
             
             // Update plant chart
