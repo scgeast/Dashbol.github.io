@@ -623,12 +623,17 @@
                     
                     <div class="input-group">
                         <label for="input-qtyOrder">Qty Order (m³)</label>
-                        <input type="number" id="input-qtyOrder" placeholder="Volume Order" min="0">
+                        <input type="number" id="input-qtyOrder" placeholder="Volume Order" min="0" oninput="calculateRemain()">
                     </div>
                     
                     <div class="input-group">
                         <label for="input-qtyDelivered">Qty Delivery (m³)</label>
-                        <input type="number" id="input-qtyDelivered" placeholder="Volume Delivery" min="0">
+                        <input type="number" id="input-qtyDelivered" placeholder="Volume Delivery" min="0" oninput="calculateRemain()">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="input-qtyRemain">Qty Remain (m³)</label>
+                        <input type="number" id="input-qtyRemain" placeholder="Volume Remain" min="0" readonly>
                     </div>
                     
                     <div class="input-group">
@@ -648,34 +653,6 @@
                     <button class="btn btn-primary" id="save-data">
                         <i class="fas fa-save"></i> Save
                     </button>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-header">
-                    <h2>Data Order</h2>
-                    <i class="fas fa-list"></i>
-                </div>
-                <div style="overflow-x: auto;">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Tanggal</th>
-                                <th>Plant Name</th>
-                                <th>Status</th>
-                                <th>Site No</th>
-                                <th>Site Name</th>
-                                <th>Qty Order (m³)</th>
-                                <th>Qty Delivery (m³)</th>
-                                <th>Qty Remain (m³)</th>
-                                <th>Qty Cancel (m³)</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="order-data">
-                            <!-- Data akan diisi secara dinamis -->
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
@@ -953,7 +930,7 @@
             updateCurrentDate();
             updateLastUpdateTime();
             initCharts();
-            renderOrderData();
+            renderListData();
             updateDashboard();
             
             // Set up event listeners
@@ -1032,6 +1009,15 @@
             const now = new Date();
             const timeString = now.toLocaleTimeString('id-ID');
             document.getElementById('last-update-time').textContent = timeString;
+        }
+        
+        // Calculate Qty Remain
+        function calculateRemain() {
+            const qtyOrder = parseInt(document.getElementById('input-qtyOrder').value) || 0;
+            const qtyDelivered = parseInt(document.getElementById('input-qtyDelivered').value) || 0;
+            const qtyRemain = qtyOrder - qtyDelivered;
+            
+            document.getElementById('input-qtyRemain').value = qtyRemain > 0 ? qtyRemain : 0;
         }
         
         // Initialize charts
@@ -1128,55 +1114,6 @@
                         }
                     }
                 }
-            });
-        }
-        
-        // Render order data to table
-        function renderOrderData(data = orderData) {
-            const tableBody = document.getElementById('order-data');
-            
-            tableBody.innerHTML = '';
-            
-            if (data.length === 0) {
-                const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="10" style="text-align: center;">Tidak ada data</td>`;
-                tableBody.appendChild(row);
-                return;
-            }
-            
-            data.forEach((item, index) => {
-                const row = document.createElement('tr');
-                
-                // Calculate remaining quantity
-                const qtyRemain = item.status === 'CANCEL' ? 0 : item.qtyOrder - item.qtyDelivered - (item.qtyCancel || 0);
-                
-                // Determine status class
-                let statusClass = '';
-                if (item.status === 'DELIVERED') statusClass = 'status-delivered';
-                else if (item.status === 'PENDING') statusClass = 'status-pending';
-                else if (item.status === 'CANCEL') statusClass = 'status-cancel';
-                
-                row.innerHTML = `
-                    <td>${formatDisplayDate(item.date)}</td>
-                    <td>${item.plant}</td>
-                    <td class="${statusClass}">${item.status === 'DELIVERED' ? 'DELIVERY' : item.status === 'PENDING' ? 'PENDING' : 'CANCEL'}</td>
-                    <td>${item.siteNo}</td>
-                    <td>${item.siteName}</td>
-                    <td>${item.qtyOrder}</td>
-                    <td>${item.qtyDelivered}</td>
-                    <td>${qtyRemain}</td>
-                    <td>${item.qtyCancel || 0}</td>
-                    <td class="action-buttons">
-                        <button class="action-btn btn-edit" onclick="editData(${index})">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="action-btn btn-delete" onclick="deleteData(${index})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                `;
-                
-                tableBody.appendChild(row);
             });
         }
         
@@ -1288,11 +1225,12 @@
             document.getElementById('input-siteName').value = '';
             document.getElementById('input-qtyOrder').value = '';
             document.getElementById('input-qtyDelivered').value = '';
+            document.getElementById('input-qtyRemain').value = '';
             document.getElementById('input-qtyCancel').value = '';
             
             // Update display
             updateLastUpdateTime();
-            renderOrderData();
+            renderListData();
             saveDataToLocalStorage();
         }
         
@@ -1308,6 +1246,9 @@
             document.getElementById('input-qtyOrder').value = item.qtyOrder;
             document.getElementById('input-qtyDelivered').value = item.qtyDelivered;
             document.getElementById('input-qtyCancel').value = item.qtyCancel || 0;
+            
+            // Calculate and set remain value
+            calculateRemain();
             
             editIndex = index;
             document.getElementById('add-data').innerHTML = '<i class="fas fa-save"></i> Update';
@@ -1328,7 +1269,6 @@
                 orderData.splice(index, 1);
                 
                 updateLastUpdateTime();
-                renderOrderData();
                 renderListData();
                 updateDashboard();
                 saveDataToLocalStorage();
