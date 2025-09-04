@@ -427,6 +427,33 @@
             background-color: var(--light);
             color: var(--dark);
             font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+        }
+        
+        .data-table th i {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        
+        .data-table th.sort-asc i.fa-sort,
+        .data-table th.sort-desc i.fa-sort {
+            display: none;
+        }
+        
+        .data-table th.sort-asc::after {
+            content: '\f0de';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-left: 5px;
+        }
+        
+        .data-table th.sort-desc::after {
+            content: '\f0dd';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-left: 5px;
         }
         
         .data-table tr:hover {
@@ -799,15 +826,15 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Tanggal</th>
-                                <th>Plant</th>
-                                <th>Status</th>
-                                <th>Site No</th>
-                                <th>Site Name</th>
-                                <th>Qty Order (m³)</th>
-                                <th>Qty Delivery (m³)</th>
-                                <th>Qty Remain (m³)</th>
-                                <th>Qty Cancel (m³)</th>
+                                <th onclick="sortTable(0)">Tanggal <i class="fas fa-sort"></i></th>
+                                <th onclick="sortTable(1)">Plant <i class="fas fa-sort"></i></th>
+                                <th onclick="sortTable(2)">Status <i class="fas fa-sort"></i></th>
+                                <th onclick="sortTable(3)">Site No <i class="fas fa-sort"></i></th>
+                                <th onclick="sortTable(4)">Site Name <i class="fas fa-sort"></i></th>
+                                <th onclick="sortTable(5)">Qty Order (m³) <i class="fas fa-sort"></i></th>
+                                <th onclick="sortTable(6)">Qty Delivery (m³) <i class="fas fa-sort"></i></th>
+                                <th onclick="sortTable(7)">Qty Remain (m³) <i class="fas fa-sort"></i></th>
+                                <th onclick="sortTable(8)">Qty Cancel (m³) <i class="fas fa-sort"></i></th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -1020,6 +1047,12 @@
         
         // Chart instances
         let statusChart, plantChart, dailyChart;
+        
+        // Variabel global untuk menyimpan status sorting
+        let currentSort = {
+            column: -1,
+            direction: 'asc' // 'asc' or 'desc'
+        };
         
         // Initialize the dashboard
         document.addEventListener('DOMContentLoaded', function() {
@@ -1285,6 +1318,100 @@
                 
                 tableBody.appendChild(row);
             });
+            
+            // Reset sorting indicators
+            const headerCells = document.querySelectorAll('.data-table th');
+            headerCells.forEach(cell => {
+                cell.classList.remove('sort-asc', 'sort-desc');
+            });
+            
+            // If there's an active sort, apply it
+            if (currentSort.column !== -1) {
+                headerCells[currentSort.column].classList.add(`sort-${currentSort.direction}`);
+            }
+        }
+        
+        // Fungsi untuk mengurutkan tabel
+        function sortTable(columnIndex) {
+            const table = document.getElementById('list-order-data');
+            const rows = Array.from(table.querySelectorAll('tr'));
+            const headerCells = document.querySelectorAll('.data-table th');
+            
+            // Hapus class sorting dari semua header
+            headerCells.forEach(cell => {
+                cell.classList.remove('sort-asc', 'sort-desc');
+            });
+            
+            // Tentukan arah sorting
+            if (currentSort.column === columnIndex) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = columnIndex;
+                currentSort.direction = 'asc';
+            }
+            
+            // Tambahkan class sorting ke header yang aktif
+            headerCells[columnIndex].classList.add(`sort-${currentSort.direction}`);
+            
+            // Urutkan baris
+            rows.sort((a, b) => {
+                let aValue = a.cells[columnIndex].textContent.trim();
+                let bValue = b.cells[columnIndex].textContent.trim();
+                
+                // Konversi ke angka jika kolom numerik
+                if ([5, 6, 7, 8].includes(columnIndex)) {
+                    aValue = parseFloat(aValue) || 0;
+                    bValue = parseFloat(bValue) || 0;
+                }
+                
+                // Bandingkan nilai
+                if (aValue < bValue) return currentSort.direction === 'asc' ? -1 : 1;
+                if (aValue > bValue) return currentSort.direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+            
+            // Hapus semua baris dari tabel
+            while (table.firstChild) {
+                table.removeChild(table.firstChild);
+            }
+            
+            // Tambahkan baris yang telah diurutkan
+            rows.forEach(row => table.appendChild(row));
+        }
+        
+        // Fungsi untuk mengurutkan data yang difilter
+        function sortFilteredData(data, columnIndex, direction) {
+            return data.sort((a, b) => {
+                let aValue, bValue;
+                
+                // Ambil nilai berdasarkan indeks kolom
+                switch(columnIndex) {
+                    case 0: aValue = a.date; bValue = b.date; break;
+                    case 1: aValue = a.plant; bValue = b.plant; break;
+                    case 2: aValue = a.status; bValue = b.status; break;
+                    case 3: aValue = a.siteNo; bValue = b.siteNo; break;
+                    case 4: aValue = a.siteName; bValue = b.siteName; break;
+                    case 5: aValue = a.qtyOrder; bValue = b.qtyOrder; break;
+                    case 6: aValue = a.qtyDelivered; bValue = b.qtyDelivered; break;
+                    case 7: 
+                        aValue = a.status === 'CANCEL' ? 0 : a.qtyOrder - a.qtyDelivered - (a.qtyCancel || 0);
+                        bValue = b.status === 'CANCEL' ? 0 : b.qtyOrder - b.qtyDelivered - (b.qtyCancel || 0);
+                        break;
+                    case 8: aValue = a.qtyCancel || 0; bValue = b.qtyCancel || 0; break;
+                    default: return 0;
+                }
+                
+                // Konversi ke angka jika kolom numerik
+                if ([5, 6, 7, 8].includes(columnIndex)) {
+                    aValue = parseFloat(aValue) || 0;
+                    bValue = parseFloat(bValue) || 0;
+                }
+                
+                // Bandingkan nilai
+                if (aValue < bValue) return direction === 'asc' ? -1 : 1;
+                if (aValue > bValue) return direction === 'asc' ? 1 : -1;
+                return 0;
+            });
         }
         
         // Add new data
@@ -1434,6 +1561,11 @@
                 return true;
             });
             
+            // Jika ada sorting aktif, terapkan sorting
+            if (currentSort.column !== -1) {
+                filteredData = sortFilteredData(filteredData, currentSort.column, currentSort.direction);
+            }
+            
             // Render filtered data
             renderListData(filteredData);
             
@@ -1447,6 +1579,10 @@
             document.getElementById('list-end-date').value = '2025-09-05';
             document.getElementById('list-plant-filter').value = 'all';
             document.getElementById('list-status-filter').value = 'all';
+            
+            // Reset sorting
+            currentSort.column = -1;
+            currentSort.direction = 'asc';
             
             // Render all data
             renderListData();
