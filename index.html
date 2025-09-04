@@ -636,6 +636,42 @@
             .kpi-grid {
                 grid-template-columns: 1fr;
             }
+        /* Style untuk header tabel yang bisa di-sort */
+        .sortable-header {
+            cursor: pointer;
+            position: relative;
+            padding-right: 20px !important;
+            user-select: none;
+        }
+        
+        .sortable-header:hover {
+            background-color: #dde4e6;
+        }
+        
+        .sortable-header::after {
+            content: "";
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #7f8c8d;
+            opacity: 0.5;
+        }
+        
+        .sortable-header.asc::after {
+            border-top: none;
+            border-bottom: 5px solid #3498db;
+            opacity: 1;
+        }
+        
+        .sortable-header.desc::after {
+            border-top: 5px solid #3498db;
+            border-bottom: none;
+            opacity: 1;
         }
     </style>
 </head>
@@ -744,6 +780,39 @@
         </div>
         
         <!-- List Order Tab -->
+    <div class="tab-content" id="list-tab">
+        <div class="filter-section">
+            <!-- ... (Filter section tetap sama) ... -->
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>List Order</h2>
+                <i class="fas fa-list"></i>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th class="sortable-header" data-sort="date">Tanggal</th>
+                            <th class="sortable-header" data-sort="plant">Plant</th>
+                            <th class="sortable-header" data-sort="status">Status</th>
+                            <th class="sortable-header" data-sort="siteNo">Site No</th>
+                            <th class="sortable-header" data-sort="siteName">Site Name</th>
+                            <th class="sortable-header" data-sort="qtyOrder">Qty Order (m³)</th>
+                            <th class="sortable-header" data-sort="qtyDelivered">Qty Delivery (m³)</th>
+                            <th class="sortable-header" data-sort="qtyRemain">Qty Remain (m³)</th>
+                            <th class="sortable-header" data-sort="qtyCancel">Qty Cancel (m³)</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list-order-data">
+                        <!-- Data akan diisi secara dinamis -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
         <div class="tab-content" id="list-tab">
             <div class="filter-section">
                 <div class="filter-title">
@@ -1730,6 +1799,96 @@
                 }, 300);
             }, 3000);
         }
+     <script>
+        // ... (Kode JavaScript sebelumnya tetap sama) ...
+        
+        // Variabel untuk menyimpan status sorting
+        let currentSort = {
+            column: null,
+            direction: 'asc' // 'asc' atau 'desc'
+        };
+        
+        // Fungsi untuk mengurutkan data
+        function sortData(column, direction) {
+            orderData.sort((a, b) => {
+                let valueA, valueB;
+                
+                // Penanganan khusus untuk kolom tanggal
+                if (column === 'date') {
+                    valueA = new Date(a[column]);
+                    valueB = new Date(b[column]);
+                } else if (column === 'qtyOrder' || column === 'qtyDelivered' || 
+                           column === 'qtyRemain' || column === 'qtyCancel') {
+                    // Penanganan untuk kolom numerik
+                    valueA = a[column] || 0;
+                    valueB = b[column] || 0;
+                } else {
+                    // Penanganan untuk kolom teks
+                    valueA = (a[column] || '').toString().toLowerCase();
+                    valueB = (b[column] || '').toString().toLowerCase();
+                }
+                
+                // Perbandingan berdasarkan tipe data
+                if (typeof valueA === 'number' && typeof valueB === 'number') {
+                    return direction === 'asc' ? valueA - valueB : valueB - valueA;
+                } else {
+                    if (valueA < valueB) return direction === 'asc' ? -1 : 1;
+                    if (valueA > valueB) return direction === 'asc' ? 1 : -1;
+                    return 0;
+                }
+            });
+        }
+        
+        // Fungsi untuk memperbarui tampilan header sorting
+        function updateSortHeaders(column, direction) {
+            // Hapus kelas sorting dari semua header
+            document.querySelectorAll('.sortable-header').forEach(header => {
+                header.classList.remove('asc', 'desc');
+            });
+            
+            // Tambahkan kelas sorting ke header yang aktif
+            const activeHeader = document.querySelector(`.sortable-header[data-sort="${column}"]`);
+            if (activeHeader) {
+                activeHeader.classList.add(direction);
+            }
+        }
+        
+        // Fungsi untuk menangani klik pada header tabel
+        function handleHeaderClick(column) {
+            // Jika mengklik kolom yang sama, toggle arah sorting
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                // Jika mengklik kolom berbeda, set ke ascending
+                currentSort.column = column;
+                currentSort.direction = 'asc';
+            }
+            
+            // Urutkan data
+            sortData(currentSort.column, currentSort.direction);
+            
+            // Perbarui tampilan header
+            updateSortHeaders(currentSort.column, currentSort.direction);
+            
+            // Render ulang data
+            renderListData();
+        }
+        
+        // Inisialisasi event listener untuk header tabel
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... (Kode inisialisasi sebelumnya) ...
+            
+            // Tambahkan event listener untuk header yang bisa di-sort
+            document.querySelectorAll('.sortable-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const column = header.getAttribute('data-sort');
+                    handleHeaderClick(column);
+                });
+            });
+        });
+        
+        // ... (Fungsi JavaScript lainnya tetap sama) ...
     </script>
 </body>
 </html>
+
