@@ -545,32 +545,6 @@
             justify-content: center;
             cursor: pointer;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            transition: right 0.3s ease, transform 0.3s ease;
-        }
-        
-        /* Saat sidebar terbuka, pindahkan toggle button */
-        .filter-sidebar.open + .sidebar-toggle {
-            right: calc(var(--sidebar-width) + 20px);
-            transform: rotate(180deg);
-        }
-        
-        /* Overlay saat sidebar terbuka */
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 998;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        
-        .sidebar-overlay.open {
-            opacity: 1;
-            visibility: visible;
         }
         
         .filter-sidebar {
@@ -666,10 +640,6 @@
             .filter-sidebar {
                 width: 85%;
                 right: -85%;
-            }
-            
-            .filter-sidebar.open + .sidebar-toggle {
-                right: calc(85% + 20px);
             }
         }
         
@@ -878,12 +848,9 @@
         
         <!-- Dashboard Tab -->
         <div class="tab-content" id="dashboard-tab">
-            <!-- Overlay untuk sidebar -->
-            <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
-            
             <!-- Sidebar Toggle Button -->
             <button class="sidebar-toggle" onclick="toggleSidebar()">
-                <i class="fas fa-chevron-right"></i>
+                <i class="fas fa-filter"></i>
             </button>
             
             <!-- Filter Sidebar -->
@@ -1139,22 +1106,9 @@
             document.getElementById('dashboard-end-date').value = formatDate(today);
         });
         
-        // Toggle sidebar dengan overlay
+        // Toggle sidebar
         function toggleSidebar() {
-            const sidebar = document.getElementById('filter-sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            const isOpen = sidebar.classList.toggle('open');
-            overlay.classList.toggle('open', isOpen);
-            
-            // Jika sidebar terbuka, pindahkan toggle button
-            const toggleButton = document.querySelector('.sidebar-toggle');
-            if (isOpen) {
-                toggleButton.style.right = 'calc(var(--sidebar-width) + 20px)';
-                toggleButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
-            } else {
-                toggleButton.style.right = '20px';
-                toggleButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
-            }
+            document.getElementById('filter-sidebar').classList.toggle('open');
         }
         
         // Format date to YYYY-MM-DD for input[type="date"]
@@ -1869,7 +1823,7 @@
                     <td>${item.plant}</td>
                     <td class="${statusClass}">${item.status === 'DELIVERED' ? 'DELIVERY' : item.status === 'PENDING' ? 'PENDING' : 'CANCEL'}</td>
                     <td>${item.siteNo}</td>
-                    <td>${item.siteName</td>
+                    <td>${item.siteName}</td>
                     <td>${item.qtyOrder}</td>
                     <td>${item.qtyDelivered}</td>
                     <td>${qtyRemain}</td>
