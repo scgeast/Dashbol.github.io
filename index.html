@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
     <style>
         :root {
@@ -114,7 +115,7 @@
         }
         .input-row {
             display: grid;
-            grid-template-columns: 0.8fr 0.8fr 0.8fr 1fr 1.2fr 0.5fr 0.5fr 0.5fr 0.5fr 1.5fr;
+            grid-template-columns: 0.8fr 0.8fr 0.8fr 1fr 1.2fr 0.5fr 0.5fr 0.5fr 0.5fr;
             gap: 8px;
             margin-bottom: 15px;
             align-items: end;
@@ -143,11 +144,6 @@
         #input-qtyCancel {
             width: 80px;
             max-width: 80px;
-        }
-        /* Remarks input - sedikit lebih lebar */
-        #input-remarks {
-            width: 100%;
-            max-width: 150px;
         }
         /* Dashboard Styles */
         .dashboard {
@@ -400,21 +396,14 @@
         .data-table th:nth-child(7), 
         .data-table th:nth-child(8),
         .data-table th:nth-child(9),
-        .data-table th:nth-child(10),
         .data-table td:nth-child(6),
         .data-table td:nth-child(7),
         .data-table td:nth-child(8),
-        .data-table td:nth-child(9),
-        .data-table td:nth-child(10) {
+        .data-table td:nth-child(9) {
             width: 80px;
             min-width: 80px;
             max-width: 100px;
             text-align: center;
-        }
-        .data-table th:nth-child(11),
-        .data-table td:nth-child(11) {
-            width: 120px;
-            min-width: 120px;
         }
         .status-delivered {
             color: var(--success);
@@ -681,11 +670,6 @@
                         <label for="input-qtyCancel">Qty Cancel</label>
                         <input type="number" id="input-qtyCancel" placeholder="m³" min="0" oninput="calculateRemainFromCancel()">
                     </div>
-                    <!-- Kolom BARU: Remarks -->
-                    <div class="input-group">
-                        <label for="input-remarks">Remarks</label>
-                        <input type="text" id="input-remarks" placeholder="Catatan (wajib jika Qty Cancel > 0)">
-                    </div>
                 </div>
                 <div class="filter-buttons">
                     <button class="btn btn-success" id="add-data">
@@ -747,6 +731,9 @@
                 <div class="card-header">
                     <h2>List Order</h2>
                     <i class="fas fa-list"></i>
+                    <button class="btn btn-success btn-export-excel" onclick="exportToExcel()" title="Ekspor ke Excel">
+                        <i class="fas fa-file-excel"></i>
+                    </button>
                 </div>
                 <div style="overflow-x: auto;">
                     <table class="data-table">
@@ -761,7 +748,6 @@
                                 <th onclick="sortTable(6)">Qty Delivery (m³) <i class="fas fa-sort"></i></th>
                                 <th onclick="sortTable(7)">Qty Remain (m³) <i class="fas fa-sort"></i></th>
                                 <th onclick="sortTable(8)">Qty Cancel (m³) <i class="fas fa-sort"></i></th>
-                                <th onclick="sortTable(9)">Remarks <i class="fas fa-sort"></i></th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -778,7 +764,7 @@
             <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
             <!-- Sidebar Toggle Button -->
             <button class="sidebar-toggle" onclick="toggleSidebar()">
-                <i class="fas fa-filter"></i>
+                <span id="sidebar-toggle-icon">>></span>
             </button>
             <!-- Filter Sidebar -->
             <div class="filter-sidebar" id="filter-sidebar">
@@ -1014,7 +1000,12 @@
             const overlay = document.getElementById('sidebar-overlay');
             const isOpen = sidebar.classList.toggle('open');
             overlay.classList.toggle('open', isOpen);
-            // Jika sidebar terbuka, pindahkan toggle button
+            
+            // Ubah ikon toggle
+            const icon = document.getElementById('sidebar-toggle-icon');
+            icon.textContent = isOpen ? '<<' : '>>';
+
+            // Pindahkan tombol toggle
             const toggleButton = document.querySelector('.sidebar-toggle');
             if (isOpen) {
                 toggleButton.style.right = 'calc(var(--sidebar-width) + 20px)';
@@ -1173,7 +1164,7 @@
             tableBody.innerHTML = '';
             if (data.length === 0) {
                 const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="11" style="text-align: center;">Tidak ada data</td>`;
+                row.innerHTML = `<td colspan="10" style="text-align: center;">Tidak ada data</td>`;
                 tableBody.appendChild(row);
                 return;
             }
@@ -1196,7 +1187,6 @@
                     <td>${item.qtyDelivered}</td>
                     <td>${qtyRemain}</td>
                     <td>${item.qtyCancel || 0}</td>
-                    <td>${item.remarks || '-'}</td>
                     <td class="action-buttons">
                         <button class="action-btn btn-edit" onclick="editData(${index})">
                             <i class="fas fa-edit"></i>
@@ -1275,7 +1265,6 @@
                         bValue = b.status === 'CANCEL' ? 0 : b.qtyOrder - b.qtyDelivered - (b.qtyCancel || 0);
                         break;
                     case 8: aValue = a.qtyCancel || 0; bValue = b.qtyCancel || 0; break;
-                    case 9: aValue = a.remarks || ''; bValue = b.remarks || ''; break;
                     default: return 0;
                 }
                 // Konversi ke angka jika kolom numerik
@@ -1299,8 +1288,6 @@
             const qtyOrder = parseInt(document.getElementById('input-qtyOrder').value) || 0;
             const qtyDelivered = parseInt(document.getElementById('input-qtyDelivered').value) || 0;
             const qtyCancel = parseInt(document.getElementById('input-qtyCancel').value) || 0;
-            const remarks = document.getElementById('input-remarks').value.trim(); // Ambil nilai remarks
-
             // Validate input
             if (!date || !siteNo || !siteName || qtyOrder <= 0) {
                 alert('Harap isi semua field dengan benar!');
@@ -1310,13 +1297,6 @@
                 alert('Jumlah Delivery + Cancel tidak boleh melebihi Quantity Order!');
                 return;
             }
-
-            // Validasi: Jika Qty Cancel > 0, maka Remarks wajib diisi
-            if (qtyCancel > 0 && remarks === '') {
-                alert('Kolom Remarks wajib diisi jika Qty Cancel > 0!');
-                return;
-            }
-
             if (editIndex === -1) {
                 // Add new data
                 orderData.push({
@@ -1327,8 +1307,7 @@
                     siteName,
                     qtyOrder,
                     qtyDelivered,
-                    qtyCancel,
-                    remarks // Simpan remarks ke objek
+                    qtyCancel
                 });
                 showNotification('Data berhasil ditambahkan!');
             } else {
@@ -1341,14 +1320,12 @@
                     siteName,
                     qtyOrder,
                     qtyDelivered,
-                    qtyCancel,
-                    remarks
+                    qtyCancel
                 };
                 editIndex = -1;
                 document.getElementById('add-data').innerHTML = '<i class="fas fa-plus"></i> Add Row';
                 showNotification('Data berhasil diupdate!');
             }
-
             // Clear input fields
             document.getElementById('input-siteNo').value = '';
             document.getElementById('input-siteName').value = '';
@@ -1356,8 +1333,6 @@
             document.getElementById('input-qtyDelivered').value = '';
             document.getElementById('input-qtyRemain').value = '';
             document.getElementById('input-qtyCancel').value = '';
-            document.getElementById('input-remarks').value = ''; // Kosongkan remarks
-
             // Update display
             updateLastUpdateTime();
             renderListData();
@@ -1374,7 +1349,6 @@
             document.getElementById('input-qtyOrder').value = item.qtyOrder;
             document.getElementById('input-qtyDelivered').value = item.qtyDelivered;
             document.getElementById('input-qtyCancel').value = item.qtyCancel || 0;
-            document.getElementById('input-remarks').value = item.remarks || ''; // Tampilkan remarks saat edit
             // Calculate and set remain value
             calculateRemain();
             editIndex = index;
@@ -1672,6 +1646,29 @@
                     document.body.removeChild(notification);
                 }, 300);
             }, 3000);
+        }
+
+        // ======== FITUR BARU: EXPORT TO EXCEL ========
+        function exportToExcel() {
+            const table = document.getElementById('list-order-data');
+            const rows = Array.from(table.querySelectorAll('tr'));
+            
+            const data = [];
+            // Header
+            const headers = Array.from(rows[0].cells).map(cell => cell.textContent.trim());
+            data.push(headers);
+            
+            // Data baris
+            for (let i = 1; i < rows.length; i++) {
+                const rowData = Array.from(rows[i].cells).map(cell => cell.textContent.trim());
+                data.push(rowData);
+            }
+            
+            // Gunakan SheetJS
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "List Order");
+            XLSX.writeFile(wb, "Daily-Delivery-Monitoring.xlsx");
         }
     </script>
 </body>
