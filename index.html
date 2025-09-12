@@ -1250,7 +1250,7 @@
                 let aValue = a.cells[columnIndex].textContent.trim();
                 let bValue = b.cells[columnIndex].textContent.trim();
                 // Konversi ke angka jika kolom numerik
-                if ([5, 6, 7, 8].includes(columnIndex)) {
+                if ([5, 6, 7, 8, 9].includes(columnIndex)) {
                     aValue = parseFloat(aValue) || 0;
                     bValue = parseFloat(bValue) || 0;
                 }
@@ -1685,20 +1685,45 @@
 
         // ======== FITUR BARU: EXPORT TO EXCEL ========
         function exportToExcel() {
-            const table = document.getElementById('list-order-data');
-            const rows = Array.from(table.querySelectorAll('tr'));
-            
+            // Ambil data dari localStorage (bukan dari tabel)
+            const orderData = JSON.parse(localStorage.getItem('orderData')) || [];
+
+            // Buat array untuk data
             const data = [];
+
             // Header
-            const headers = Array.from(rows[0].cells).map(cell => cell.textContent.trim());
+            const headers = [
+                'Tanggal',
+                'Plant',
+                'Status',
+                'Site No',
+                'Site Name',
+                'Qty Order (m³)',
+                'Qty Delivery (m³)',
+                'Qty Remain (m³)',
+                'Qty Cancel (m³)',
+                'Remarks'
+            ];
             data.push(headers);
-            
+
             // Data baris
-            for (let i = 1; i < rows.length; i++) {
-                const rowData = Array.from(rows[i].cells).map(cell => cell.textContent.trim());
-                data.push(rowData);
-            }
-            
+            orderData.forEach(item => {
+                const qtyRemain = item.status === 'CANCEL' ? 0 : item.qtyOrder - item.qtyDelivered - (item.qtyCancel || 0);
+                const row = [
+                    formatDisplayDate(item.date),
+                    item.plant,
+                    item.status === 'DELIVERED' ? 'DELIVERY' : item.status === 'PENDING' ? 'PENDING' : 'CANCEL',
+                    item.siteNo,
+                    item.siteName,
+                    item.qtyOrder,
+                    item.qtyDelivered,
+                    qtyRemain,
+                    item.qtyCancel || 0,
+                    item.remarks || '-'
+                ];
+                data.push(row);
+            });
+
             // Gunakan SheetJS
             const ws = XLSX.utils.aoa_to_sheet(data);
             const wb = XLSX.utils.book_new();
