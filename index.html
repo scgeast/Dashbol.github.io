@@ -664,7 +664,7 @@
                     </div>
                     <div class="input-group">
                         <label for="input-siteName">Site Name</label>
-                        <input type="text" id="input-siteName" placeholder="Nama Site">
+                        <input type="text" id="input-siteName" placeholder="Nama Site" oninput="autoFillSiteNo()">
                     </div>
                     <div class="input-group">
                         <label for="input-qtyOrder">Qty Order</label>
@@ -1729,6 +1729,20 @@
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "List Order");
             XLSX.writeFile(wb, "Daily-Delivery-Monitoring.xlsx");
+        }
+
+        // ======== FITUR BARU: AUTO-FILL SITE NO DARI SITE NAME ========
+        function autoFillSiteNo() {
+            const siteName = document.getElementById('input-siteName').value;
+            const siteNoInput = document.getElementById('input-siteNo');
+
+            // Cari 6 digit angka pertama di awal string
+            const match = siteName.match(/^\d{6}/);
+            if (match) {
+                siteNoInput.value = match[0]; // Isi dengan 6 digit pertama
+            } else {
+                siteNoInput.value = ''; // Kosongkan jika tidak ada 6 digit
+            }
         }
     </script>
 </body>
